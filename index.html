@@ -3,37 +3,66 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tools - The Carey Network</title>
-  <link rel="icon" type="image/png" href="../images/icon.png">
-  <link rel="apple-touch-icon" href="../images/icon.png">
-  <link rel="stylesheet" href="../css/style.css">
+  <title>The Carey Network</title>
+
+  <link rel="icon" type="image/png" href="images/icon.png">
+  <link rel="apple-touch-icon" href="images/icon.png">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
+  <!-- Header -->
   <header class="site-header">
     <div class="logo-container">
-      <img src="../images/logo.png" alt="The Carey Network Logo" class="logo">
+      <img src="images/logo.png" alt="The Carey Network Logo" class="logo">
     </div>
   </header>
 
+  <!-- Main Hero -->
   <main>
-    <section class="hero">
-      <h1>Tools</h1>
-      <p>Access all your tools here.</p>
+    <section id="home" class="hero">
+      <h1>Welcome to The Carey Network</h1>
+      <p>Connecting you to apps, tools, games, and more — all in one place.</p>
+      <a href="#about" class="btn-primary">Explore</a>
+    </section>
+
+    <section id="about" class="about-section">
+      <div class="content">
+        <h2>About The Carey Network</h2>
+        <p>The Carey Network brings together everything you need — apps, games, and tools — in a single seamless experience. Dive in and discover your favorites.</p>
+      </div>
     </section>
   </main>
 
+  <!-- Floating Utility Bar -->
   <nav class="utility-bar">
-    <a href="../index.html" class="utility-icon"><img src="../images/icon.png" alt="Home"></a>
-    <a href="../games/index.html" class="utility-icon"><img src="../images/games.png" alt="Games"></a>
-    <a href="../apps/index.html" class="utility-icon"><img src="../images/apps.png" alt="Apps"></a>
-    <a href="../settings/index.html" class="utility-icon"><img src="../images/settings.png" alt="Settings"></a>
-    <a href="index.html" class="utility-icon active"><img src="../images/tools.png" alt="Tools"></a>
+    <a href="index.html" class="utility-icon active"><img src="images/icon.png" alt="Home"></a>
+    <a href="games/index.html" class="utility-icon"><img src="images/games.png" alt="Games"></a>
+    <a href="apps/index.html" class="utility-icon"><img src="images/apps.png" alt="Apps"></a>
+    <a href="settings/index.html" class="utility-icon"><img src="images/settings.png" alt="Settings"></a>
+    <a href="tools/index.html" class="utility-icon"><img src="images/tools.png" alt="Tools"></a>
   </nav>
 
   <footer class="site-footer">
     <p>&copy; 2026 The Carey Network — All rights reserved.</p>
   </footer>
 
+  <script>
+    const utilityIcons = document.querySelectorAll('.utility-bar .utility-icon');
+    const currentPage = window.location.pathname.split("/").pop();
+
+    utilityIcons.forEach(icon => {
+      const linkPage = icon.getAttribute("href").split("/").pop();
+      if(linkPage === currentPage || (currentPage === "" && linkPage === "index.html")){
+        icon.classList.add("active");
+      }
+
+      icon.addEventListener('click', () => {
+        utilityIcons.forEach(i => i.classList.remove('active'));
+        icon.classList.add('active');
+      });
+    });
+  </script>
+
 </body>
-</html>
+</html>9
