@@ -32,7 +32,6 @@
     </section>
   </main>
 
-  <!-- Utility Bar -->
   <nav class="utility-bar">
     <a href="index.html" class="utility-icon"><img src="images/icon.png" alt="Home"></a>
     <a href="games/index.html" class="utility-icon"><img src="images/games.png" alt="Games"></a>
@@ -51,6 +50,7 @@
 
     utilityIcons.forEach(icon => {
       const linkPage = icon.getAttribute("href").split("/").pop();
+      icon.classList.remove("active");
       if(linkPage === currentPage){
         icon.classList.add("active");
       }
@@ -61,6 +61,5 @@
       });
     });
   </script>
-
 </body>
 </html>
