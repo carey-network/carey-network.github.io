@@ -10,7 +10,8 @@ body {
   background: #000;
   color: #fff;
   line-height: 1.6;
-  padding-bottom: 120px;
+  padding-bottom: 140px; /* prevents overlap with floating bar */
+
   opacity: 0;
   transform: translateY(10px);
   transition: opacity 0.4s ease, transform 0.4s ease;
@@ -87,21 +88,31 @@ body.page-loaded {
   color: #777;
 }
 
-/* ---- Utility Bar ---- */
+/* ---- Floating Utility Bar ---- */
 .utility-bar {
   position: fixed;
-  bottom: 20px;
+  bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(17, 17, 17, 0.95);
+  
+  background: rgba(17, 17, 17, 0.55);
+  backdrop-filter: blur(12px);
+  
   border-radius: 50px;
-  padding: 12px 24px;
+  padding: 14px 26px;
+  
   display: flex;
   justify-content: space-between;
   align-items: center;
+  
   width: 90%;
-  max-width: 500px;
+  max-width: 520px;
   z-index: 1000;
+
+  /* subtle orange glow */
+  box-shadow:
+    0 0 12px rgba(230, 92, 0, 0.25),
+    0 0 30px rgba(230, 92, 0, 0.15);
 }
 
 .utility-bar .utility-icon {
