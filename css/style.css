@@ -4,6 +4,8 @@
   padding: 0;
   box-sizing: border-box;
   font-family: "Inter", sans-serif;
+  -webkit-font-smoothing: antialiased; /* Fix flickering */
+  -moz-osx-font-smoothing: grayscale;  /* Fix flickering */
 }
 
 body {
@@ -111,22 +113,16 @@ body {
   bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
-  
   background: rgba(17, 17, 17, 0.55);
   backdrop-filter: blur(12px);
-
   border-radius: 50px;
   padding: 14px 26px;
-  
   display: flex;
   justify-content: space-between;
   align-items: center;
-  
   width: 90%;
   max-width: 520px;
   z-index: 1000;
-
-  /* subtle orange glow around bar */
   box-shadow:
     0 0 12px rgba(230, 92, 0, 0.25),
     0 0 30px rgba(230, 92, 0, 0.15);
@@ -152,18 +148,15 @@ body {
   transition: transform 0.2s ease, filter 0.2s ease;
 }
 
-/* Hover glow (stronger) */
+/* Hover - no glow, just slight scale */
 .utility-bar .utility-icon:hover img {
-  transform: scale(1.3);
-  filter: drop-shadow(0 0 5px #fff)
-          drop-shadow(0 0 10px #fff)
-          drop-shadow(0 0 18px #e65c00)
-          drop-shadow(0 0 30px #e65c00);
+  transform: scale(1.1);
+  filter: none;
 }
 
 /* Active glow (subtle but noticeable) */
 .utility-bar .utility-icon.active img {
-  transform: scale(1.2);
+  transform: scale(1.3);
   filter: drop-shadow(0 0 4px #e65c00)
           drop-shadow(0 0 12px #e65c00);
 }
@@ -177,4 +170,32 @@ body {
 @keyframes slideDown {
   0% { opacity: 0; transform: translateY(-20px); }
   100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- Subpages Consistent Styling ---- */
+.page-content {
+  padding: 60px 20px;
+  max-width: 900px;
+  margin: 0 auto;
+  background: #111;
+  border-radius: 10px;
+  color: #ddd;
+  animation: fadeIn 1s ease forwards;
+}
+
+.page-content h1,
+.page-content h2 {
+  color: #e65c00;
+  margin-bottom: 20px;
+}
+
+.page-content p {
+  line-height: 1.5;
+  font-size: 1rem;
+}
+
+/* Fix flickering text on animations */
+body, .page-content, h1, h2, p {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
