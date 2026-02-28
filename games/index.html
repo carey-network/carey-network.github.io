@@ -20,7 +20,7 @@
   <main>
     <section class="hero">
       <h1>Games</h1>
-      <p>Explore fun and exciting games here.</p>
+      <p>Play your favorite games here.</p>
       <a href="../index.html" class="btn-primary">Home</a>
     </section>
   </main>
@@ -43,7 +43,8 @@
 
     utilityIcons.forEach(icon => {
       const linkPage = icon.getAttribute("href").split("/").pop();
-      if(linkPage === currentPage){
+      icon.classList.remove("active");
+      if(linkPage === currentPage || (currentPage === "" && linkPage === "index.html")){
         icon.classList.add("active");
       }
 
