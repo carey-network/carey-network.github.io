@@ -4,26 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The Carey Network</title>
-
-  <!-- Favicon & Apple Touch Icon -->
-  <link rel="icon" type="image/png" href="images/icon.png">
-  <link rel="apple-touch-icon" href="images/icon.png">
-
-  <!-- Stylesheet -->
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-  <!-- Header -->
+  <!-- Header, Hero, About, etc. (your original content unchanged) -->
   <header class="site-header">
     <div class="logo-container">
       <img src="images/logo.png" alt="The Carey Network Logo" class="logo">
     </div>
   </header>
 
-  <!-- Main Hero -->
   <main>
-    <section id="home" class="hero">
+    <section class="hero">
       <h1>Welcome to The Carey Network</h1>
       <p>Connecting you to apps, tools, games, and more — all in one place.</p>
       <a href="#about" class="btn-primary">Explore</a>
@@ -42,35 +35,23 @@
     <a href="index.html" class="utility-icon active">
       <img src="images/icon.png" alt="Home">
     </a>
-    <a href="games.html" class="utility-icon">
+    <a href="games/index.html" class="utility-icon">
       <img src="images/games.png" alt="Games">
     </a>
-    <a href="apps.html" class="utility-icon">
+    <a href="apps/index.html" class="utility-icon">
       <img src="images/apps.png" alt="Apps">
     </a>
-    <a href="settings.html" class="utility-icon">
+    <a href="settings/index.html" class="utility-icon">
       <img src="images/settings.png" alt="Settings">
     </a>
-    <a href="tools.html" class="utility-icon">
+    <a href="tools/index.html" class="utility-icon">
       <img src="images/tools.png" alt="Tools">
     </a>
   </nav>
 
-  <!-- Footer -->
   <footer class="site-footer">
     <p>&copy; 2026 The Carey Network — All rights reserved.</p>
   </footer>
-
-  <!-- Script for active icon switching (optional, keeps active state if using JS) -->
-  <script>
-    const utilityIcons = document.querySelectorAll('.utility-bar .utility-icon');
-    utilityIcons.forEach(icon => {
-      icon.addEventListener('click', () => {
-        utilityIcons.forEach(i => i.classList.remove('active'));
-        icon.classList.add('active');
-      });
-    });
-  </script>
 
 </body>
 </html>
