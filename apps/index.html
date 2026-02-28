@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Apps - The Carey Network</title>
+
   <link rel="icon" type="image/png" href="../images/icon.png">
   <link rel="apple-touch-icon" href="../images/icon.png">
   <link rel="stylesheet" href="../css/style.css">
@@ -20,6 +21,7 @@
     <section class="hero">
       <h1>Apps</h1>
       <p>Discover all your favorite apps here.</p>
+      <a href="../index.html" class="btn-primary">Home</a>
     </section>
   </main>
 
@@ -34,6 +36,23 @@
   <footer class="site-footer">
     <p>&copy; 2026 The Carey Network — All rights reserved.</p>
   </footer>
+
+  <script>
+    const utilityIcons = document.querySelectorAll('.utility-bar .utility-icon');
+    const currentPage = window.location.pathname.split("/").pop();
+
+    utilityIcons.forEach(icon => {
+      const linkPage = icon.getAttribute("href").split("/").pop();
+      if(linkPage === currentPage){
+        icon.classList.add("active");
+      }
+
+      icon.addEventListener('click', () => {
+        utilityIcons.forEach(i => i.classList.remove('active'));
+        icon.classList.add('active');
+      });
+    });
+  </script>
 
 </body>
 </html>
