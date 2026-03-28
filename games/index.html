@@ -1,25 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Games</title>
-<link rel="stylesheet" href="../css/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Games - The Carey Network</title>
+  <link rel="icon" type="image/png" href="../images/icon.png" />
+  <link rel="apple-touch-icon" href="../images/icon.png" />
+  <link rel="stylesheet" href="../css/style.css" />
 </head>
 <body>
 
-<header class="site-header">
-<img src="../images/logo.png" class="logo">
-</header>
+<!-- No header text or hero on subpages per request -->
 
+<!-- Orange background block still present -->
 <main>
-<section class="subpage-bg"></section>
+  <section class="hero orange-bg"></section>
 </main>
 
+<!-- Nav container for injected utility bar -->
 <div id="nav-container"></div>
 
 <footer class="site-footer">
-<p>&copy; 2026 The Carey Network</p>
+  <p>&copy; 2026 The Carey Network — All rights reserved.</p>
 </footer>
 
 <script>
@@ -37,7 +39,6 @@ async function loadNav() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-
   setTimeout(() => {
     document.body.classList.add("fade-in");
   }, 50);
@@ -54,14 +55,14 @@ document.addEventListener("DOMContentLoaded", () => {
           document.body.classList.remove("fade-in");
           document.body.classList.add("fade-out");
 
-          setTimeout(() => {
+          // Instant transition
+          requestAnimationFrame(() => {
             window.location.href = target;
-          }, 300);
+          });
         }
       });
     }
   });
-
 });
 </script>
 
