@@ -37,8 +37,31 @@ async function loadNav() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  document.body.classList.add("fade-in");
+
+  setTimeout(() => {
+    document.body.classList.add("fade-in");
+  }, 50);
+
   loadNav();
+
+  document.querySelectorAll("a").forEach(link => {
+    if (link.hostname === window.location.hostname) {
+      link.addEventListener("click", function (e) {
+        if (this.href !== window.location.href && this.getAttribute("href") !== "#") {
+          e.preventDefault();
+          const target = this.href;
+
+          document.body.classList.remove("fade-in");
+          document.body.classList.add("fade-out");
+
+          setTimeout(() => {
+            window.location.href = target;
+          }, 300);
+        }
+      });
+    }
+  });
+
 });
 </script>
 
