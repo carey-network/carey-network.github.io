@@ -1,15 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Carey Network</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <img src="images/logo.png" class="logo" alt="The Carey Network Logo" />
+</header>
+
+<main>
+  <section class="hero orange-bg">
+    <h1>Welcome to The Carey Network</h1>
+    <p>Connecting you to apps, tools, games, and more.</p>
+    <a href="apps/index.html" class="btn-primary">Explore</a>
+  </section>
+</main>
+
+<!-- Utility Bar -->
+<div id="nav-container"></div>
+
+<footer class="site-footer">
+  <p>&copy; 2026 The Carey Network</p>
+</footer>
+
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const icons = document.querySelectorAll('.utility-icon');
+async function loadNav() {
+  const res = await fetch("/components/nav.html");
+  const data = await res.text();
+  document.getElementById("nav-container").innerHTML = data;
 
-        icons.forEach(icon => {
-            icon.addEventListener('click', function() {
-                // Remove active class from all icons
-                icons.forEach(i => i.classList.remove('active'));
+  const icons = document.querySelectorAll(".utility-icon");
+  const page = window.location.pathname.split("/").pop();
+  icons.forEach(icon => {
+    if (icon.href.includes(page)) icon.classList.add("active");
+  });
+}
 
-                // Add active class to the clicked icon
-                this.classList.add('active');
-            });
-        });
-    });
+document.addEventListener("DOMContentLoaded", () => {
+  document.body.classList.add("fade-in");
+  loadNav();
+
+  document.querySelectorAll("a").forEach(link => {
+    if (link.hostname === window.location.hostname) {
+      link.addEventListener("click", function (e) {
+        if (this.href !== window.location.href && this.getAttribute("href") !== "#") {
+          e.preventDefault();
+          const target = this.href;
+          document.body.classList.remove("fade-in");
+          document.body.classList.add("fade-out");
+          requestAnimationFrame(() => { window.location.href = target; });
+        }
+      });
+    }
+  });
+});
 </script>
+
+</body>
+</html>
