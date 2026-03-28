@@ -12,7 +12,9 @@
 <img src="../images/logo.png" class="logo">
 </header>
 
-<main></main>
+<main>
+<section class="subpage-bg"></section>
+</main>
 
 <div id="nav-container"></div>
 
@@ -26,18 +28,15 @@ async function loadNav() {
   const data = await res.text();
   document.getElementById("nav-container").innerHTML = data;
 
-  const utilityIcons = document.querySelectorAll('.utility-icon');
-  const currentPage = window.location.pathname.split("/").pop();
+  const icons = document.querySelectorAll(".utility-icon");
+  const page = window.location.pathname.split("/").pop();
 
-  utilityIcons.forEach(icon => {
-    const linkPage = icon.getAttribute("href").split("/").pop();
-    if (linkPage === currentPage) {
-      icon.classList.add("active");
-    }
+  icons.forEach(icon => {
+    if (icon.href.includes(page)) icon.classList.add("active");
   });
 }
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
   document.body.classList.add("fade-in");
   loadNav();
 });
