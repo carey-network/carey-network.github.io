@@ -3,9 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Apps - The Carey Network</title>
-
-<link rel="icon" href="../images/icon.png">
+<title>Apps</title>
 <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
@@ -14,51 +12,21 @@
 <img src="../images/logo.png" class="logo">
 </header>
 
-<main>
-<section class="hero">
-<h1>Apps</h1>
-<p>Access your favorite apps here.</p>
-<a href="../index.html" class="btn-primary">Home</a>
-</section>
-</main>
+<main></main>
 
-<nav class="utility-bar">
-<a href="../index.html" class="utility-icon"><img src="../images/icon.png"></a>
-<a href="../games/index.html" class="utility-icon"><img src="../images/games.png"></a>
-<a href="index.html" class="utility-icon"><img src="../images/apps.png"></a>
-<a href="../settings/index.html" class="utility-icon"><img src="../images/settings.png"></a>
-<a href="../tools/index.html" class="utility-icon"><img src="../images/tools.png"></a>
-</nav>
+<div id="nav-container"></div>
 
 <footer class="site-footer">
 <p>&copy; 2026 The Carey Network</p>
 </footer>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-  document.body.classList.add("fade-in");
+async function loadNav() {
+  const res = await fetch("/components/nav.html");
+  const data = await res.text();
+  document.getElementById("nav-container").innerHTML = data;
 
-  const links = document.querySelectorAll("a");
-
-  links.forEach(link => {
-    if (link.hostname === window.location.hostname && link.href) {
-      link.addEventListener("click", function (e) {
-        if (this.href !== window.location.href && this.getAttribute("href") !== "#") {
-          e.preventDefault();
-          const target = this.href;
-
-          document.body.classList.remove("fade-in");
-          document.body.classList.add("fade-out");
-
-          setTimeout(() => {
-            window.location.href = target;
-          }, 300);
-        }
-      });
-    }
-  });
-
-  const utilityIcons = document.querySelectorAll('.utility-bar .utility-icon');
+  const utilityIcons = document.querySelectorAll('.utility-icon');
   const currentPage = window.location.pathname.split("/").pop();
 
   utilityIcons.forEach(icon => {
@@ -67,6 +35,11 @@ document.addEventListener("DOMContentLoaded", function () {
       icon.classList.add("active");
     }
   });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  document.body.classList.add("fade-in");
+  loadNav();
 });
 </script>
 
