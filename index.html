@@ -20,32 +20,41 @@
 </section>
 </main>
 
-<nav class="utility-bar">
-<a href="index.html" class="utility-icon"><img src="images/icon.png"></a>
-<a href="games/index.html" class="utility-icon"><img src="images/games.png"></a>
-<a href="apps/index.html" class="utility-icon"><img src="images/apps.png"></a>
-<a href="settings/index.html" class="utility-icon"><img src="images/settings.png"></a>
-<a href="tools/index.html" class="utility-icon"><img src="images/tools.png"></a>
-</nav>
+<!-- NAV LOAD -->
+<div id="nav-container"></div>
 
 <footer class="site-footer">
 <p>&copy; 2026 The Carey Network</p>
 </footer>
 
 <script>
+async function loadNav() {
+  const res = await fetch("/components/nav.html");
+  const data = await res.text();
+  document.getElementById("nav-container").innerHTML = data;
+
+  const utilityIcons = document.querySelectorAll('.utility-icon');
+  const currentPage = window.location.pathname.split("/").pop();
+
+  utilityIcons.forEach(icon => {
+    const linkPage = icon.getAttribute("href").split("/").pop();
+    if (linkPage === currentPage || (currentPage === "" && linkPage === "index.html")) {
+      icon.classList.add("active");
+    }
+  });
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   document.body.classList.add("fade-in");
+  loadNav();
 
-  const links = document.querySelectorAll("a");
-
-  links.forEach(link => {
-    if (link.hostname === window.location.hostname && link.href) {
+  document.querySelectorAll("a").forEach(link => {
+    if (link.hostname === window.location.hostname) {
       link.addEventListener("click", function (e) {
-        if (this.href !== window.location.href && this.getAttribute("href") !== "#") {
+        if (this.href !== window.location.href) {
           e.preventDefault();
           const target = this.href;
 
-          document.body.classList.remove("fade-in");
           document.body.classList.add("fade-out");
 
           setTimeout(() => {
@@ -53,17 +62,6 @@ document.addEventListener("DOMContentLoaded", function () {
           }, 300);
         }
       });
-    }
-  });
-
-  // Active icon logic
-  const utilityIcons = document.querySelectorAll('.utility-bar .utility-icon');
-  const currentPage = window.location.pathname.split("/").pop();
-
-  utilityIcons.forEach(icon => {
-    const linkPage = icon.getAttribute("href").split("/").pop();
-    if (linkPage === currentPage || (currentPage === "" && linkPage === "index.html")) {
-      icon.classList.add("active");
     }
   });
 });
