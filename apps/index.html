@@ -1,23 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Apps - The Carey Network</title>
-  <link rel="icon" type="image/png" href="../images/icon.png" />
-  <link rel="apple-touch-icon" href="../images/icon.png" />
-  <link rel="stylesheet" href="../css/style.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Apps - The Carey Network</title>
+<link rel="stylesheet" href="../css/style.css" />
 </head>
 <body>
 
-<!-- No header text or hero on subpages per request -->
+<header class="site-header">
+  <img src="../images/logo.png" class="logo" alt="The Carey Network Logo" />
+</header>
 
-<!-- Orange background block still present -->
 <main>
   <section class="hero orange-bg"></section>
 </main>
 
-<!-- Nav container for injected utility bar -->
+<!-- Utility Bar -->
 <div id="nav-container"></div>
 
 <footer class="site-footer">
@@ -32,17 +31,13 @@ async function loadNav() {
 
   const icons = document.querySelectorAll(".utility-icon");
   const page = window.location.pathname.split("/").pop();
-
   icons.forEach(icon => {
     if (icon.href.includes(page)) icon.classList.add("active");
   });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  setTimeout(() => {
-    document.body.classList.add("fade-in");
-  }, 50);
-
+  document.body.classList.add("fade-in");
   loadNav();
 
   document.querySelectorAll("a").forEach(link => {
@@ -51,14 +46,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (this.href !== window.location.href && this.getAttribute("href") !== "#") {
           e.preventDefault();
           const target = this.href;
-
           document.body.classList.remove("fade-in");
           document.body.classList.add("fade-out");
-
-          // Instant transition
-          requestAnimationFrame(() => {
-            window.location.href = target;
-          });
+          requestAnimationFrame(() => { window.location.href = target; });
         }
       });
     }
