@@ -11,22 +11,16 @@ body {
   color: #fff;
   line-height: 1.6;
   padding-bottom: 120px;
-
   opacity: 0;
-  transform: translateY(15px);
+  transition: opacity 0.4s ease-in-out;
 }
 
-/* Animations */
 body.fade-in {
   opacity: 1;
-  transform: translateY(0);
-  transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
 body.fade-out {
   opacity: 0;
-  transform: translateY(15px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 /* ---- Header ---- */
@@ -39,58 +33,60 @@ body.fade-out {
 
 .logo {
   height: 160px;
+  width: auto;
 }
 
-/* ---- Hero (homepage) ---- */
+/* ---- Hero Section ---- */
 .hero {
-  min-height: calc(100vh - 220px);
+  min-height: 70vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #e65c00, #000);
   text-align: center;
-
-  opacity: 0;
-  transform: translateY(20px);
-  animation: fadeUp 0.8s ease forwards;
-  animation-delay: 0.2s;
+  padding: 40px;
 }
 
-@keyframes fadeUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.orange-bg {
+  background: linear-gradient(135deg, #e65c00, #000);
 }
 
+/* Only main homepage text styling */
 .hero h1 {
   font-size: 3rem;
+  margin-bottom: 12px;
+  color: #fff;
 }
 
 .hero p {
-  margin: 15px 0;
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  color: #fff;
 }
 
 .btn-primary {
+  display: inline-block;
   padding: 12px 24px;
   background: #fff;
   color: #e65c00;
   text-decoration: none;
+  font-weight: 700;
   border-radius: 50px;
-  font-weight: bold;
+  transition: 0.25s ease;
+  box-shadow: 0 0 10px #e65c00, 0 0 20px #e65c00;
 }
 
-/* ---- Subpages ---- */
-.subpage-bg {
-  min-height: calc(100vh - 220px);
-  background: linear-gradient(135deg, #e65c00, #000);
+.btn-primary:hover {
+  background: #e65c00;
+  color: #fff;
+  box-shadow: 0 0 20px #fff, 0 0 40px #fff;
 }
 
 /* ---- Footer ---- */
 .site-footer {
   text-align: center;
-  padding: 18px;
+  padding: 18px 0;
+  font-size: 0.9rem;
   background: #111;
   color: #777;
 }
@@ -119,20 +115,21 @@ body.fade-out {
 }
 
 .utility-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 70px;
   height: 70px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  border-radius: 50%;
 }
 
 .utility-icon img {
   width: 40px;
   transition: transform 0.2s ease, filter 0.2s ease;
-  filter: none;
+  filter: none; /* No glow by default */
 }
 
-/* Glow ONLY on hover/active */
+/* Glow only on hover or if active */
 .utility-icon:hover img,
 .utility-icon.active img {
   transform: scale(1.15);
