@@ -3,16 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tools</title>
-<link rel="stylesheet" href="../css/style.css">
+<title>The Carey Network</title>
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
 <header class="site-header">
-<img src="../images/logo.png" class="logo">
+<img src="images/logo.png" class="logo">
 </header>
 
-<main></main>
+<main>
+<section class="hero">
+<h1>Welcome to The Carey Network</h1>
+<p>Connecting you to apps, tools, games, and more.</p>
+<a href="apps/index.html" class="btn-primary">Explore</a>
+</section>
+</main>
 
 <div id="nav-container"></div>
 
@@ -26,18 +32,15 @@ async function loadNav() {
   const data = await res.text();
   document.getElementById("nav-container").innerHTML = data;
 
-  const utilityIcons = document.querySelectorAll('.utility-icon');
-  const currentPage = window.location.pathname.split("/").pop();
+  const icons = document.querySelectorAll(".utility-icon");
+  const page = window.location.pathname.split("/").pop();
 
-  utilityIcons.forEach(icon => {
-    const linkPage = icon.getAttribute("href").split("/").pop();
-    if (linkPage === currentPage) {
-      icon.classList.add("active");
-    }
+  icons.forEach(icon => {
+    if (icon.href.includes(page)) icon.classList.add("active");
   });
 }
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
   document.body.classList.add("fade-in");
   loadNav();
 });
