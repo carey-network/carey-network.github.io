@@ -1,59 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Settings - The Carey Network</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings - The Carey Network</title>
 
-  <link rel="icon" type="image/png" href="../images/icon.png">
-  <link rel="apple-touch-icon" href="../images/icon.png">
-  <link rel="stylesheet" href="../css/style.css">
+<link rel="icon" href="../images/icon.png">
+<link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
 
-  <header class="site-header">
-    <div class="logo-container">
-      <img src="../images/logo.png" alt="The Carey Network Logo" class="logo">
-    </div>
-  </header>
+<header class="site-header">
+<img src="../images/logo.png" class="logo">
+</header>
 
-  <main>
-    <section class="hero">
-      <h1>Settings</h1>
-      <p>Customize your experience here.</p>
-      <a href="../index.html" class="btn-primary">Home</a>
-    </section>
-  </main>
+<main class="page-content">
+<h1>Settings</h1>
+<p>Customize your experience here.</p>
+</main>
 
-  <nav class="utility-bar">
-    <a href="../index.html" class="utility-icon"><img src="../images/icon.png" alt="Home"></a>
-    <a href="../games/index.html" class="utility-icon"><img src="../images/games.png" alt="Games"></a>
-    <a href="../apps/index.html" class="utility-icon"><img src="../images/apps.png" alt="Apps"></a>
-    <a href="index.html" class="utility-icon active"><img src="../images/settings.png" alt="Settings"></a>
-    <a href="../tools/index.html" class="utility-icon"><img src="../images/tools.png" alt="Tools"></a>
-  </nav>
+<nav class="utility-bar">
+<a href="../index.html" class="utility-icon"><img src="../images/icon.png"></a>
+<a href="../games/index.html" class="utility-icon"><img src="../images/games.png"></a>
+<a href="../apps/index.html" class="utility-icon"><img src="../images/apps.png"></a>
+<a href="../settings/index.html" class="utility-icon"><img src="../images/settings.png"></a>
+<a href="../tools/index.html" class="utility-icon"><img src="../images/tools.png"></a>
+</nav>
 
-  <footer class="site-footer">
-    <p>&copy; 2026 The Carey Network — All rights reserved.</p>
-  </footer>
+<footer class="site-footer">
+<p>&copy; 2026 The Carey Network</p>
+</footer>
 
-  <script>
-    const utilityIcons = document.querySelectorAll('.utility-bar .utility-icon');
-    const currentPage = window.location.pathname.split("/").pop();
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  document.body.classList.add("fade-in");
 
-    utilityIcons.forEach(icon => {
-      const linkPage = icon.getAttribute("href").split("/").pop();
-      icon.classList.remove("active");
-      if(linkPage === currentPage || (currentPage === "" && linkPage === "index.html")){
-        icon.classList.add("active");
-      }
+  const links = document.querySelectorAll("a");
 
-      icon.addEventListener('click', () => {
-        utilityIcons.forEach(i => i.classList.remove('active'));
-        icon.classList.add('active');
+  links.forEach(link => {
+    if (link.hostname === window.location.hostname && link.href) {
+      link.addEventListener("click", function (e) {
+        if (this.href !== window.location.href && this.getAttribute("href") !== "#") {
+          e.preventDefault();
+          const target = this.href;
+
+          document.body.classList.remove("fade-in");
+          document.body.classList.add("fade-out");
+
+          setTimeout(() => {
+            window.location.href = target;
+          }, 300);
+        }
       });
-    });
-  </script>
+    }
+  });
+
+  const utilityIcons = document.querySelectorAll('.utility-bar .utility-icon');
+  const currentPage = window.location.pathname.split("/").pop();
+
+  utilityIcons.forEach(icon => {
+    const linkPage = icon.getAttribute("href").split("/").pop();
+    if (linkPage === currentPage) {
+      icon.classList.add("active");
+    }
+  });
+});
+</script>
 
 </body>
 </html>
