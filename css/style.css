@@ -130,8 +130,8 @@ body.fade-out {
   max-width: 500px;
   z-index: 1000;
   box-shadow:
-    0 0 8px rgba(230, 92, 0, 0.2),
-    0 0 20px rgba(230, 92, 0, 0.1);
+    0 0 8px rgba(230, 92, 0, 0.15),
+    0 0 15px rgba(230, 92, 0, 0.08);
 }
 
 .utility-icon {
@@ -154,9 +154,10 @@ body.fade-out {
   transition: transform 0.2s ease, filter 0.2s ease;
 }
 
-/* Active (reduced glow) */
+/* Glow ONLY on hover or active */
+.utility-icon:hover img,
 .utility-icon.active img {
-  transform: scale(1.2);
+  transform: scale(1.15);
   filter:
     drop-shadow(0 0 4px #fff)
     drop-shadow(0 0 8px #e65c00);
