@@ -41,6 +41,11 @@ body.fade-out { opacity:0; }
 }
 
 .utility-icon { display:flex; align-items:center; justify-content:center; width:70px; height:70px; border-radius:50%; }
-.utility-icon img { width:40px; transition: transform 0.2s ease, filter 0.2s ease; filter:none; }
+.utility-icon img { width:40px; height:40px; transition: transform 0.2s ease, filter 0.2s ease; filter:none; }
+
+/* ---- GLOW ONLY ON HOVER OR ACTIVE ---- */
 .utility-icon:hover img,
-.utility-icon.active img { transform: scale(1.15); filter: drop-shadow(0 0 6px #e65c00) drop-shadow(0 0 12px #e65c00); }
+.utility-icon.active img {
+  transform: scale(1.15);
+  filter: drop-shadow(0 0 6px #e65c00) drop-shadow(0 0 12px #e65c00);
+}
