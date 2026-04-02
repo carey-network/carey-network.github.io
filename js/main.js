@@ -1,60 +1,50 @@
-// main.js
-
-// Detect if running as a standalone web app
-function isWebApp() {
-  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+// ----------------------
+// Load Utility Nav
+// ----------------------
+async function loadNav() {
+  const res = await fetch("/components/nav.html");
+  const data = await res.text();
+  document.getElementById("nav-container").innerHTML = data;
 }
 
-// Automatically toggle Web-App Mode if running as a standalone web app
-function autoToggleWebAppMode() {
-  const webAppToggle = document.querySelector('input[type="checkbox"][data-webapp-toggle]');
-  if (webAppToggle) {
-    webAppToggle.checked = isWebApp();
-  }
+// ----------------------
+// Web-App Auto Toggle
+// ----------------------
+function setupWebAppAutoToggle() {
+  const isWebApp = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  const toggle = document.getElementById('webapp-toggle');
+  if (toggle) toggle.checked = isWebApp;
 }
 
-// Setup utility bar active icons
-function setupUtilityBar() {
-  const icons = document.querySelectorAll(".utility-icon");
-  const currentPath = window.location.pathname;
-
-  icons.forEach(icon => {
-    const iconPath = new URL(icon.href).pathname;
-    if (iconPath === currentPath) {
-      icon.classList.add("active");
-    }
-  });
-}
-
-// Setup page fade transitions for links (except in standalone web app)
+// ----------------------
+// Page Link Transitions
+// (Optional: keep fade-in/fade-out for links)
+// ----------------------
 function setupTransitions() {
-  if (isWebApp()) return; // Skip dynamic transitions in web-app mode
-
   document.querySelectorAll("a").forEach(link => {
     if (link.hostname === window.location.hostname) {
-      link.addEventListener("click", function (e) {
+      link.addEventListener("click", function(e) {
         const target = this.href;
         const current = window.location.href;
         if (target === current || this.getAttribute("href") === "#") return;
 
         e.preventDefault();
 
-        document.body.classList.remove("fade-in");
-        document.body.classList.add("fade-out");
+        // Fade-out (optional)
+        document.body.style.transition = "opacity 0.3s ease";
+        document.body.style.opacity = 0;
 
-        setTimeout(() => {
-          window.location.href = target;
-        }, 400); // shorter fade
+        setTimeout(() => window.location.href = target, 300);
       });
     }
   });
 }
 
-// Initialize everything on DOMContentLoaded
+// ----------------------
+// Initialize
+// ----------------------
 document.addEventListener("DOMContentLoaded", () => {
-  document.body.classList.add("fade-in");
-
-  setupUtilityBar();
+  loadNav();
+  setupWebAppAutoToggle(); // ✅ Auto toggle checkbox
   setupTransitions();
-  autoToggleWebAppMode();
 });
