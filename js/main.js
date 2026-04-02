@@ -1,71 +1,64 @@
-// =============================
-// 🌟 Full-Screen SPA Navigation Patch
-// =============================
+// main.js
 
-(function() {
-  // 🔹 Load a page dynamically (mini SPA)
-  async function loadPage(url) {
-    try {
-      const res = await fetch(url);
-      if (!res.ok) throw new Error("Page not found");
+// 🔹 Load the utility bar / nav
+async function loadNav() {
+  const res = await fetch("/components/nav.html");
+  const data = await res.text();
+  document.getElementById("nav-container").innerHTML = data;
 
-      const html = await res.text();
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(html, "text/html");
+  // Highlight the current icon
+  const icons = document.querySelectorAll(".utility-icon");
+  const currentPath = window.location.pathname;
 
-      // Replace <main> content only
-      const newMain = doc.querySelector("main");
-      if (newMain) {
-        document.querySelector("main").innerHTML = newMain.innerHTML;
-
-        // Trigger fade-in for smooth transition
-        document.body.classList.remove("fade-out");
-        document.body.classList.add("fade-in");
-
-        // Re-attach nav & transitions for new content
-        if (typeof loadNav === "function") loadNav();
-        if (typeof setupTransitions === "function") setupTransitions();
-        if (typeof detectWebAppMode === "function") detectWebAppMode();
-      }
-    } catch (err) {
-      console.error("SPA load failed:", err);
-      window.location.href = url; // fallback to full reload
+  icons.forEach(icon => {
+    const iconPath = new URL(icon.href).pathname;
+    if (iconPath === currentPath) {
+      icon.classList.add("active");
     }
-  }
-
-  // 🔹 Intercept internal link clicks
-  function interceptLinks() {
-    document.querySelectorAll("a").forEach(link => {
-      // Only intercept links to the same domain
-      if (link.hostname === window.location.hostname) {
-        link.addEventListener("click", function(e) {
-          const target = this.href;
-          const current = window.location.href;
-
-          if (target === current || this.getAttribute("href") === "#") return;
-
-          // Prevent full page reload
-          e.preventDefault();
-
-          // Fade out
-          document.body.classList.remove("fade-in");
-          document.body.classList.add("fade-out");
-
-          // Load page dynamically
-          setTimeout(() => {
-            loadPage(target);
-            history.pushState(null, "", target);
-          }, 300); // smooth fade
-        });
-      }
-    });
-  }
-
-  // 🔹 Handle back/forward buttons
-  window.addEventListener("popstate", () => {
-    if (typeof loadPage === "function") loadPage(window.location.pathname);
   });
+}
 
-  // 🔹 Init SPA navigation on DOM ready
-  document.addEventListener("DOMContentLoaded", interceptLinks);
-})();
+// 🔹 Smooth page transitions
+function setupTransitions() {
+  document.querySelectorAll("a").forEach(link => {
+    if (link.hostname === window.location.hostname) {
+      link.addEventListener("click", function(e) {
+        const target = this.href;
+        const current = window.location.href;
+
+        if (target === current || this.getAttribute("href") === "#") return;
+
+        e.preventDefault();
+        document.body.classList.remove("fade-in");
+        document.body.classList.add("fade-out");
+
+        setTimeout(() => {
+          window.location.href = target; // normal reload, safe for PWA
+        }, 500);
+      });
+    }
+  });
+}
+
+// 🔹 Detect if site is running as a mobile web app
+function detectWebAppMode() {
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+                       || window.navigator.standalone === true;
+
+  const webAppToggle = document.querySelector('.setting-card:last-child input[type="checkbox"]');
+  if (webAppToggle) webAppToggle.checked = isStandalone;
+
+  // Force scroll top to avoid iOS address bar showing
+  if (isStandalone) window.scrollTo(0, 0);
+}
+
+// 🔹 DOM Ready
+document.addEventListener("DOMContentLoaded", () => {
+  // Initial fade-in
+  document.body.classList.remove("fade-out");
+  document.body.classList.add("fade-in");
+
+  loadNav();
+  setupTransitions();
+  detectWebAppMode();
+});
