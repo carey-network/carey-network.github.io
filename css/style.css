@@ -102,10 +102,11 @@ body.fade-out {
 
 /* ---- Utility Bar ---- */
 .utility-bar {
-  position: fixed;
-  bottom: 15px;
-  left: 50%;
-  transform: translateX(-50%);
+  position: fixed !important;
+  bottom: 15px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+
   background: rgba(17,17,17,0.95);
   border-radius: 50px;
   padding: 10px 20px;
