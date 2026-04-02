@@ -30,9 +30,13 @@ async function loadNav() {
   document.getElementById("nav-container").innerHTML = data;
 
   const icons = document.querySelectorAll(".utility-icon");
-  const page = window.location.pathname.split("/").pop();
+  const currentPath = window.location.pathname;
+
   icons.forEach(icon => {
-    if (icon.href.includes(page)) icon.classList.add("active");
+    const iconPath = new URL(icon.href).pathname;
+    if (iconPath === currentPath) {
+      icon.classList.add("active");
+    }
   });
 }
 
@@ -46,15 +50,16 @@ document.addEventListener("DOMContentLoaded", () => {
         if (this.href !== window.location.href && this.getAttribute("href") !== "#") {
           e.preventDefault();
           const target = this.href;
+
           document.body.classList.remove("fade-in");
           document.body.classList.add("fade-out");
-          requestAnimationFrame(() => { window.location.href = target; });
+
+          setTimeout(() => {
+            window.location.href = target;
+          }, 400);
         }
       });
     }
   });
 });
 </script>
-
-</body>
-</html>
