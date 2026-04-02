@@ -44,6 +44,7 @@ window.onload = () => {
   setupTransitions();
 
   const isWebApp = detectWebAppMode();
+
   const cloakButton = document.querySelector('.setting-card:first-child button');
   const autoCloakToggle = document.querySelector('.setting-card:nth-child(2) input[type="checkbox"]');
   const panicButtonToggle = document.querySelector('.setting-card:nth-child(3) input[type="checkbox"]');
@@ -60,7 +61,7 @@ window.onload = () => {
 
   popupClose.addEventListener('click', () => popup.classList.remove('show'));
 
-  // Web-App Mode handling
+  // Disable Web-App Mode toggle if detected
   if (isWebApp) {
     webAppToggle.checked = true;
     webAppToggle.disabled = true;
@@ -69,45 +70,66 @@ window.onload = () => {
     });
   } else {
     webAppToggle.checked = false;
-    webAppToggle.disabled = true; // can't activate web-app on normal browser
+    webAppToggle.disabled = true; // cannot enable manually
   }
 
-  // --- Auto Cloak persistence ---
+  // Initialize Auto Cloak from localStorage
   if (autoCloakToggle) {
     autoCloakToggle.checked = localStorage.getItem('autoCloak') === 'true';
-
-    // Auto Cloak triggers immediately on page load
-    if (autoCloakToggle.checked) cloak();
-
-    autoCloakToggle.addEventListener('change', () => {
-      localStorage.setItem('autoCloak', autoCloakToggle.checked);
-      if (autoCloakToggle.checked) cloak();
-    });
   }
 
-  // Cloak button click
+  // Cloak Button functionality
   cloakButton?.addEventListener('click', () => {
-    cloak();
-  });
-
-  function cloak() {
-    // Open blank tab
+    if (webAppToggle.checked) {
+      showPopup('This Setting Cannot Be Activated Due To Web-App Mode');
+      return;
+    }
+    // Open blank page in new tab and redirect current tab to Google
     const newTab = window.open('about:blank', '_blank');
-
     if (newTab) {
-      // Redirect current tab to Google
+      newTab.focus();
       window.location.href = 'https://www.google.com';
     } else {
-      // Popup fallback if blocked
-      showPopup('Popup blocked! Please allow popups to activate Cloak.');
+      showPopup('Popup blocked! Please allow popups to use Cloak.');
     }
-  }
+  });
 
-  // Panic button remains for later
+  // Auto Cloak functionality
+  autoCloakToggle?.addEventListener('change', () => {
+    if (webAppToggle.checked) {
+      autoCloakToggle.checked = false;
+      showPopup('This Setting Cannot Be Activated Due To Web-App Mode');
+      return;
+    }
+    localStorage.setItem('autoCloak', autoCloakToggle.checked);
+    if (autoCloakToggle.checked) {
+      // Delay slightly so the user sees the page load
+      setTimeout(() => {
+        const newTab = window.open('about:blank', '_blank');
+        if (newTab) {
+          newTab.focus();
+          window.location.href = 'https://www.google.com';
+        } else {
+          showPopup('Popup blocked! Please allow popups to use Auto Cloak.');
+        }
+      }, 300);
+    }
+  });
+
+  // Panic Button (leave logic for later)
   if (panicButtonToggle) {
     panicButtonToggle.checked = localStorage.getItem('panicButton') === 'true';
     panicButtonToggle.addEventListener('change', () => {
       localStorage.setItem('panicButton', panicButtonToggle.checked);
     });
+  }
+
+  // Auto Cloak activation on page load
+  if (autoCloakToggle && autoCloakToggle.checked) {
+    const newTab = window.open('about:blank', '_blank');
+    if (newTab) {
+      newTab.focus();
+      window.location.href = 'https://www.google.com';
+    }
   }
 };
