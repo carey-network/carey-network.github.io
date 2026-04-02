@@ -38,15 +38,12 @@ async function loadNav() {
       icon.classList.add("active");
     }
   });
+
+  // 🔥 IMPORTANT: Attach transitions AFTER nav loads
+  setupTransitions();
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  // Ensure clean state every load
-  document.body.classList.remove("fade-out");
-  document.body.classList.add("fade-in");
-
-  loadNav();
-
+function setupTransitions() {
   document.querySelectorAll("a").forEach(link => {
     if (link.hostname === window.location.hostname) {
       link.addEventListener("click", function (e) {
@@ -54,7 +51,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const target = this.href;
         const current = window.location.href;
 
-        // Prevent reloading same page
         if (target === current || this.getAttribute("href") === "#") return;
 
         e.preventDefault();
@@ -64,10 +60,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
         setTimeout(() => {
           window.location.href = target;
-        }, 500); // matches CSS timing
+        }, 500);
       });
     }
   });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.body.classList.remove("fade-out");
+  document.body.classList.add("fade-in");
+
+  loadNav();
+
+  // Also apply to existing links immediately
+  setupTransitions();
 });
 </script>
 
