@@ -12,31 +12,34 @@ async function loadNav() {
     const iconPath = new URL(icon.href).pathname;
     if (iconPath === currentPath) icon.classList.add("active");
   });
-
-  setupTransitions();
 }
 
-// 🔹 Page transitions
+// 🔥 GLOBAL TRANSITIONS (FIXED FOR ALL LINKS)
 function setupTransitions() {
-  document.querySelectorAll("a").forEach(link => {
-    if (link.hostname === window.location.hostname) {
-      link.addEventListener("click", function(e) {
-        if (this.closest('.utility-bar')) return;
+  document.addEventListener("click", function(e) {
+    const link = e.target.closest("a");
+    if (!link) return;
 
-        const target = this.href;
-        if (target === window.location.href || this.getAttribute("href") === "#") return;
+    // same-origin only
+    if (link.hostname !== window.location.hostname) return;
 
-        e.preventDefault();
+    // ignore utility bar
+    if (link.closest('.utility-bar')) return;
 
-        fadeThen(() => {
-          window.location.href = target;
-        });
-      });
-    }
+    const href = link.getAttribute("href");
+
+    // ignore invalid links
+    if (!href || href === "#" || link.href === window.location.href) return;
+
+    e.preventDefault();
+
+    fadeThen(() => {
+      window.location.href = link.href;
+    });
   });
 }
 
-// 🔥 NEW: reliable transition handler (replaces timeout issues)
+// 🔥 CLEAN FADE HANDLER (NO BUGS)
 function fadeThen(callback) {
   document.body.classList.remove("fade-in");
   document.body.classList.add("fade-out");
@@ -65,7 +68,7 @@ function showPopup(msg) {
   popup.classList.add('show');
 }
 
-// 🔹 Cloak function (your version, unchanged logic)
+// 🔹 Cloak (UNCHANGED)
 function openCloak() {
   const newTab = window.open('about:blank', '_blank');
   if (!newTab) return showPopup('Popup blocked! Allow popups to use Cloak.');
@@ -85,7 +88,8 @@ function openCloak() {
 window.addEventListener("DOMContentLoaded", () => {
   document.body.classList.add("fade-in");
 
-  loadNav(); // ⬅️ this already calls setupTransitions()
+  loadNav();
+  setupTransitions(); // ✅ ONLY place it's called
 
   const isWebApp = detectWebAppMode();
   const cloakButton = document.querySelector('.setting-card:first-child button');
@@ -113,14 +117,16 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 🔥 Cloak button (FIXED TRANSITION)
-  cloakButton.addEventListener('click', () => {
-    if (!webAppToggle.checked) {
-      fadeThen(openCloak); // ✅ replaces broken timeout
-    } else {
-      showPopup('This Setting Cannot Be Activated Due To Web-App Mode');
-    }
-  });
+  // 🔥 Cloak button (WITH TRANSITION)
+  if (cloakButton) {
+    cloakButton.addEventListener('click', () => {
+      if (!webAppToggle.checked) {
+        fadeThen(openCloak);
+      } else {
+        showPopup('This Setting Cannot Be Activated Due To Web-App Mode');
+      }
+    });
+  }
 
   // 🔹 Auto Cloak
   if (autoCloakToggle) {
@@ -130,7 +136,7 @@ window.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem('autoCloak', autoCloakToggle.checked);
 
       if (autoCloakToggle.checked && !webAppToggle.checked) {
-        fadeThen(openCloak); // ✅ fixed here too
+        fadeThen(openCloak);
       } else if (webAppToggle.checked) {
         autoCloakToggle.checked = false;
         showPopup('This Setting Cannot Be Activated Due To Web-App Mode');
@@ -138,7 +144,7 @@ window.addEventListener("DOMContentLoaded", () => {
     });
 
     if (autoCloakToggle.checked && !webAppToggle.checked) {
-      fadeThen(openCloak); // ✅ and here
+      fadeThen(openCloak);
     }
   }
 
@@ -150,7 +156,7 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 🔹 Cloak button styling (unchanged)
+  // 🔹 Cloak button styling
   if (cloakButton) {
     cloakButton.style.background = "#e65c00";
     cloakButton.style.boxShadow = "0 0 12px #e65c00, 0 0 25px rgba(230,92,0,0.5)";
