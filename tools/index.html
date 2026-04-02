@@ -3,116 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Settings - The Carey Network</title>
+<title>Tools - The Carey Network</title>
 <link rel="stylesheet" href="../css/style.css" />
-
-<style>
-/* ---- Page Load Animation ---- */
-body {
-  opacity: 0;
-}
-
-body.loaded header,
-body.loaded main,
-body.loaded footer {
-  animation: pageEnter 0.6s ease forwards;
-}
-
-@keyframes pageEnter {
-  0% {
-    opacity: 0;
-    transform: translateY(20px) scale(0.97);
-    filter: blur(6px);
-  }
-  60% {
-    opacity: 1;
-    transform: translateY(-2px) scale(1.01);
-    filter: blur(1px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: blur(0);
-  }
-}
-
-/* ---- Settings Menu ---- */
-.settings-menu {
-  background: rgba(0,0,0,0.5);
-  backdrop-filter: blur(12px);
-  border-radius: 20px;
-  padding: 30px;
-  max-width: 800px;
-  width: 90%;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 20px;
-  box-shadow: 0 0 20px rgba(230,92,0,0.3);
-}
-
-.setting-card {
-  background: rgba(17,17,17,0.7);
-  border-radius: 15px;
-  padding: 20px;
-  text-align: center;
-  color: #fff;
-  cursor: pointer;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
-}
-
-.setting-card h3 {
-  margin-bottom: 15px;
-}
-
-.setting-card:hover {
-  transform: translateY(-3px);
-  background: rgba(230,92,0,0.15);
-  box-shadow: 0 0 10px #e65c00, 0 0 20px rgba(230,92,0,0.5);
-}
-
-/* ---- Toggle ---- */
-.toggle-switch {
-  position: relative;
-  width: 50px;
-  height: 26px;
-  display: inline-block;
-}
-
-.toggle-switch input {
-  opacity: 0;
-}
-
-.slider {
-  position: absolute;
-  top:0; left:0; right:0; bottom:0;
-  background:#444;
-  border-radius:34px;
-  transition:0.25s;
-}
-
-.slider:before {
-  content:"";
-  position:absolute;
-  height:20px;
-  width:20px;
-  left:3px;
-  bottom:3px;
-  background:#fff;
-  border-radius:50%;
-  transition:0.25s;
-}
-
-input:checked + .slider {
-  background:#e65c00;
-}
-
-input:checked + .slider:before {
-  transform:translateX(24px);
-}
-</style>
 </head>
-
 <body>
 
 <header class="site-header">
@@ -120,56 +13,7 @@ input:checked + .slider:before {
 </header>
 
 <main>
-  <section class="hero orange-bg">
-
-    <div class="settings-menu">
-
-      <!-- Cloak -->
-      <div class="setting-card">
-        <h3>Cloak</h3>
-        <button style="
-          padding:10px 20px;
-          border:none;
-          border-radius:12px;
-          background:#e65c00;
-          color:#fff;
-          font-weight:600;
-          cursor:pointer;
-        ">
-          Activate
-        </button>
-      </div>
-
-      <!-- Auto Cloak -->
-      <div class="setting-card">
-        <h3>Auto Cloak</h3>
-        <label class="toggle-switch">
-          <input type="checkbox">
-          <span class="slider"></span>
-        </label>
-      </div>
-
-      <!-- Panic Button -->
-      <div class="setting-card">
-        <h3>Panic Button</h3>
-        <label class="toggle-switch">
-          <input type="checkbox">
-          <span class="slider"></span>
-        </label>
-      </div>
-
-      <!-- Web-App Mode -->
-      <div class="setting-card">
-        <h3>Web-App Mode</h3>
-        <label class="toggle-switch">
-          <input type="checkbox">
-          <span class="slider"></span>
-        </label>
-      </div>
-
-    </div>
-
-  </section>
+  <section class="hero orange-bg"></section>
 </main>
 
 <!-- Utility Bar -->
