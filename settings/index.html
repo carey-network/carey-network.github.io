@@ -5,6 +5,48 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Settings - The Carey Network</title>
 <link rel="stylesheet" href="../css/style.css" />
+<style>
+/* ---- Modern Settings Menu ---- */
+.settings-menu {
+  background: rgba(0,0,0,0.5);      /* translucent dark */
+  backdrop-filter: blur(12px);       /* subtle blur */
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 800px;
+  width: 90%;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+  box-shadow: 0 0 20px rgba(230,92,0,0.3);
+}
+
+.setting-card {
+  background: rgba(17,17,17,0.7);
+  border-radius: 15px;
+  padding: 20px;
+  text-align: center;
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.setting-card h3 {
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+}
+
+.setting-card p {
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.setting-card:hover {
+  transform: translateY(-3px);
+  background: rgba(230,92,0,0.15);
+  box-shadow: 0 0 10px #e65c00, 0 0 20px rgba(230,92,0,0.5);
+}
+</style>
 </head>
 <body>
 
@@ -14,13 +56,24 @@
 
 <main>
   <section class="hero orange-bg">
-    <!-- Settings Menu -->
+    <!-- Modern Settings Menu -->
     <div class="settings-menu">
-      <h2>Settings</h2>
-      <a href="#">Account</a>
-      <a href="#">Privacy</a>
-      <a href="#">Appearance</a>
-      <a href="#">Notifications</a>
+      <div class="setting-card">
+        <h3>Account</h3>
+        <p>Manage your account info</p>
+      </div>
+      <div class="setting-card">
+        <h3>Privacy</h3>
+        <p>Control your privacy settings</p>
+      </div>
+      <div class="setting-card">
+        <h3>Appearance</h3>
+        <p>Customize the look and feel</p>
+      </div>
+      <div class="setting-card">
+        <h3>Notifications</h3>
+        <p>Set up alerts and reminders</p>
+      </div>
     </div>
   </section>
 </main>
@@ -48,7 +101,6 @@ async function loadNav() {
     }
   });
 
-  // 🔥 IMPORTANT: Attach transitions AFTER nav loads
   setupTransitions();
 }
 
@@ -79,8 +131,6 @@ document.addEventListener("DOMContentLoaded", () => {
   document.body.classList.add("fade-in");
 
   loadNav();
-
-  // Also apply to existing links immediately
   setupTransitions();
 });
 </script>
