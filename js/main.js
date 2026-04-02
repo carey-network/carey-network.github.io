@@ -23,21 +23,22 @@ function setupTransitions() {
   document.querySelectorAll("a").forEach(link => {
     if (link.hostname === window.location.hostname) {
       link.addEventListener("click", function(e) {
+        // IGNORE clicks on the utility bar
+        if (this.closest('.utility-bar')) return;
+
         const target = this.href;
         const current = window.location.href;
-
         if (target === current || this.getAttribute("href") === "#") return;
 
         e.preventDefault();
 
-        // Fade out
+        // Fade out body
         document.body.classList.remove("fade-in");
         document.body.classList.add("fade-out");
 
-        // Wait for CSS transition to finish before navigating
         setTimeout(() => {
           window.location.href = target;
-        }, 500); // match the CSS transition duration
+        }, 500); // match CSS transition
       });
     }
   });
