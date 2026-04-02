@@ -194,15 +194,42 @@ async function loadNav() {
       icon.classList.add("active");
     }
   });
+
+  // 🔥 Attach transitions AFTER nav loads
+  setupTransitions();
 }
 
-window.addEventListener("load", () => {
+function setupTransitions() {
+  document.querySelectorAll("a").forEach(link => {
+    if (link.hostname === window.location.hostname) {
+
+      link.addEventListener("click", function (e) {
+
+        const target = this.href;
+        const current = window.location.href;
+
+        if (target === current || this.getAttribute("href") === "#") return;
+
+        e.preventDefault();
+
+        document.body.classList.remove("fade-in");
+        document.body.classList.add("fade-out");
+
+        setTimeout(() => {
+          window.location.href = target;
+        }, 500);
+      });
+    }
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.body.classList.remove("fade-out");
+  document.body.classList.add("fade-in");
+
   loadNav();
 
-  // GUARANTEED to run after everything loads
-  setTimeout(() => {
-    document.body.classList.add("loaded");
-  }, 50);
+  setupTransitions();
 });
 </script>
 
