@@ -81,11 +81,11 @@
   background:#ff7f2a;
 }
 
-/* Toggle */
+/* ---- Modern Glow Toggle ---- */
 .toggle-switch {
   position: relative;
-  width: 60px;
-  height: 32px;
+  width: 70px;
+  height: 36px;
   display: inline-block;
 }
 
@@ -98,105 +98,55 @@
 .slider {
   position: absolute;
   cursor: pointer;
-  top:0; left:0;
-  right:0; bottom:0;
-  background-color: #444;
+  top: 0; left: 0;
+  right: 0; bottom: 0;
+  background: #333;
   border-radius: 34px;
-  transition: 0.25s;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.6);
 }
 
 .slider:before {
   position: absolute;
   content: "";
-  height: 26px;
-  width: 26px;
+  height: 30px;
+  width: 30px;
   left: 3px;
   bottom: 3px;
   background-color: #fff;
   border-radius: 50%;
-  transition: 0.25s;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
 }
 
 input:checked + .slider {
-  background-color: #e65c00;
+  background: #e65c00;
+  box-shadow: 0 0 10px rgba(230,92,0,0.7), inset 0 2px 4px rgba(0,0,0,0.6);
 }
 
 input:checked + .slider:before {
-  transform: translateX(28px);
+  transform: translateX(34px);
+  box-shadow: 0 0 8px rgba(255,255,255,0.6);
 }
 
-/* Mobile */
-@media (max-width: 600px) {
-  .settings-menu {
-    grid-template-columns: 1fr;
-  }
+/* Hover Effect */
+.toggle-switch:hover .slider {
+  box-shadow: 0 0 12px rgba(230,92,0,0.6), inset 0 2px 4px rgba(0,0,0,0.6);
 }
 
-/* ---- Popup ---- */
-.popup-overlay {
-  position: fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background: rgba(0,0,0,0.75);
-  backdrop-filter: blur(12px);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 10000;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+.toggle-switch:hover .slider:before {
+  box-shadow: 0 0 12px rgba(255,255,255,0.7);
 }
 
-.popup-overlay.show {
-  display: flex;
-  opacity: 1;
+/* Optional: pulse effect when checked */
+input:checked + .slider {
+  animation: glowPulse 1.5s infinite alternate;
 }
 
-.popup-content {
-  background: rgba(17,17,17,0.95);
-  border-radius: 20px;
-  width: 350px;
-  max-width: 90%;
-  height: 350px;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  text-align: center;
-  color: #fff;
-  box-shadow: 0 0 30px #e65c00, 0 0 60px rgba(230,92,0,0.6);
-  font-family: "Inter", sans-serif;
-  animation: popupScale 0.25s ease-out;
-  padding: 20px;
-}
-
-.popup-content p {
-  font-size: 1.4rem;
-  margin-bottom: 30px;
-}
-
-.popup-content button {
-  padding: 16px 32px;
-  border:none;
-  border-radius:14px;
-  background:#e65c00;
-  color:#fff;
-  font-weight:700;
-  font-size:1.2rem;
-  cursor:pointer;
-  transition: 0.25s ease;
-}
-
-.popup-content button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 25px #fff, 0 0 50px #e65c00;
-}
-
-@keyframes popupScale {
-  0% { transform: scale(0.8); opacity:0; }
-  100% { transform: scale(1); opacity:1; }
+@keyframes glowPulse {
+  0% { box-shadow: 0 0 8px rgba(230,92,0,0.7), inset 0 2px 4px rgba(0,0,0,0.6); }
+  50% { box-shadow: 0 0 16px rgba(230,92,0,0.9), inset 0 2px 4px rgba(0,0,0,0.6); }
+  100% { box-shadow: 0 0 8px rgba(230,92,0,0.7), inset 0 2px 4px rgba(0,0,0,0.6); }
 }
 
 /* ---- Page Transitions ---- */
