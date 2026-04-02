@@ -196,13 +196,13 @@ async function loadNav() {
   });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("load", () => {
   loadNav();
 
-  // 🔥 Trigger animation after render
-  requestAnimationFrame(() => {
+  // GUARANTEED to run after everything loads
+  setTimeout(() => {
     document.body.classList.add("loaded");
-  });
+  }, 50);
 });
 </script>
 
