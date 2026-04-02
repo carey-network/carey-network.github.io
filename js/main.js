@@ -1,6 +1,6 @@
 // main.js
 
-// 🔹 Load the nav
+// 🔹 Load Nav
 async function loadNav() {
   const res = await fetch("/components/nav.html");
   const data = await res.text();
@@ -48,15 +48,23 @@ function showPopup(msg) {
   popup.classList.add('show');
 }
 
-// 🔹 Cloak function
+// 🔹 Cloak function (new mobile-friendly method)
 function openCloak() {
   const newTab = window.open('about:blank', '_blank');
-  if (newTab) {
-    newTab.location.href = window.location.href; // open current site in about:blank
-    window.location.href = 'https://www.google.com'; // redirect old tab
-  } else {
-    showPopup('Popup blocked! Allow popups to use Cloak.');
-  }
+  if (!newTab) return showPopup('Popup blocked! Allow popups to use Cloak.');
+
+  // Wait a tiny bit to allow the tab to initialize
+  setTimeout(() => {
+    // Grab current page HTML
+    const html = document.documentElement.outerHTML;
+    // Write it into the blank tab
+    newTab.document.open();
+    newTab.document.write(html);
+    newTab.document.close();
+
+    // Redirect original tab
+    window.location.href = 'https://www.google.com';
+  }, 50);
 }
 
 // 🔹 DOM Ready
@@ -93,8 +101,11 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // Cloak button
   cloakButton.addEventListener('click', () => {
-    if (!webAppToggle.checked) openCloak();
-    else showPopup('This Setting Cannot Be Activated Due To Web-App Mode');
+    if (!webAppToggle.checked) {
+      document.body.classList.remove("fade-in");
+      document.body.classList.add("fade-out");
+      setTimeout(openCloak, 500); // allow fade-out first
+    } else showPopup('This Setting Cannot Be Activated Due To Web-App Mode');
   });
 
   // Auto Cloak
@@ -103,14 +114,21 @@ window.addEventListener("DOMContentLoaded", () => {
 
     autoCloakToggle.addEventListener('change', () => {
       localStorage.setItem('autoCloak', autoCloakToggle.checked);
-      if (autoCloakToggle.checked && !webAppToggle.checked) openCloak();
-      else if (webAppToggle.checked) {
+      if (autoCloakToggle.checked && !webAppToggle.checked) {
+        document.body.classList.remove("fade-in");
+        document.body.classList.add("fade-out");
+        setTimeout(openCloak, 500);
+      } else if (webAppToggle.checked) {
         autoCloakToggle.checked = false;
         showPopup('This Setting Cannot Be Activated Due To Web-App Mode');
       }
     });
 
-    if (autoCloakToggle.checked && !webAppToggle.checked) openCloak();
+    if (autoCloakToggle.checked && !webAppToggle.checked) {
+      document.body.classList.remove("fade-in");
+      document.body.classList.add("fade-out");
+      setTimeout(openCloak, 500);
+    }
   }
 
   // Panic toggle
@@ -121,9 +139,9 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Cloak button styling (restore soft orange glow)
+  // Cloak button styling (soft orange glow)
   if (cloakButton) {
-    cloakButton.style.background = "#e65c00"; // soft orange
+    cloakButton.style.background = "#e65c00";
     cloakButton.style.boxShadow = "0 0 12px #e65c00, 0 0 25px rgba(230,92,0,0.5)";
     cloakButton.addEventListener("mouseover", () => {
       cloakButton.style.transform = "scale(1.05)";
