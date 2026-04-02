@@ -25,12 +25,12 @@ body.fade-out {
   opacity:0;
 }
 
-/* ---- UI ELEMENT TRANSITIONS ---- */
+/* ---- Page Transitions for UI Elements ---- */
 header, main, footer {
   opacity: 0;
-  transform: translateY(10px) scale(0.98);
-  filter: blur(2px);
-  transition: opacity 0.5s ease, transform 0.5s ease, filter 0.5s ease;
+  transform: translateY(8px) scale(0.985);
+  filter: blur(1.5px);
+  transition: opacity 0.35s ease-out, transform 0.35s ease-out, filter 0.35s ease-out;
 }
 
 body.fade-in header,
@@ -45,8 +45,8 @@ body.fade-out header,
 body.fade-out main,
 body.fade-out footer {
   opacity: 0;
-  transform: translateY(-10px) scale(0.98);
-  filter: blur(2px);
+  transform: translateY(-8px) scale(0.985);
+  filter: blur(1.5px);
 }
 
 /* ---- Header ---- */
