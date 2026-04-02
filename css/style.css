@@ -16,22 +16,23 @@ body {
   opacity:0;
 }
 
-/* ---- Modern Page Load Animation ---- */
+/* ---- SAFE Page Load Animation ---- */
 header, main, footer {
-  opacity: 0;
+  opacity: 1;
 }
 
+/* animate only when loaded */
 body.loaded header,
 body.loaded main,
 body.loaded footer {
-  animation: pageEnter 0.6s ease forwards;
+  animation: pageEnter 0.6s ease;
 }
 
 @keyframes pageEnter {
   0% {
     opacity: 0;
-    transform: translateY(20px) scale(0.97);
-    filter: blur(6px);
+    transform: translateY(15px) scale(0.98);
+    filter: blur(5px);
   }
   100% {
     opacity: 1;
