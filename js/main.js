@@ -14,7 +14,7 @@ async function loadNav() {
   });
 }
 
-// 🔥 GLOBAL TRANSITIONS (FIXED FOR ALL LINKS)
+// 🔥 GLOBAL TRANSITIONS (WORKS EVERYWHERE NOW)
 function setupTransitions() {
   document.addEventListener("click", function(e) {
     const link = e.target.closest("a");
@@ -23,12 +23,9 @@ function setupTransitions() {
     // same-origin only
     if (link.hostname !== window.location.hostname) return;
 
-    // ignore utility bar
-    if (link.closest('.utility-bar')) return;
-
     const href = link.getAttribute("href");
 
-    // ignore invalid links
+    // ignore bad links
     if (!href || href === "#" || link.href === window.location.href) return;
 
     e.preventDefault();
@@ -39,20 +36,19 @@ function setupTransitions() {
   });
 }
 
-// 🔥 CLEAN FADE HANDLER (NO BUGS)
+// 🔥 RELIABLE FADE
 function fadeThen(callback) {
   document.body.classList.remove("fade-in");
   document.body.classList.add("fade-out");
 
-  // force repaint so animation actually plays
   void document.body.offsetWidth;
 
-  const handler = () => {
-    document.body.removeEventListener("transitionend", handler);
+  const done = () => {
+    document.body.removeEventListener("transitionend", done);
     callback();
   };
 
-  document.body.addEventListener("transitionend", handler);
+  document.body.addEventListener("transitionend", done);
 }
 
 // 🔹 Detect web app
@@ -68,20 +64,45 @@ function showPopup(msg) {
   popup.classList.add('show');
 }
 
-// 🔹 Cloak (UNCHANGED)
+// 🔥 FIXED CLOAK (NO BLACK SCREEN)
 function openCloak() {
   const newTab = window.open('about:blank', '_blank');
-  if (!newTab) return showPopup('Popup blocked! Allow popups to use Cloak.');
 
-  setTimeout(() => {
-    const html = document.documentElement.outerHTML;
+  if (!newTab) {
+    showPopup('Popup blocked! Allow popups to use Cloak.');
+    return;
+  }
 
-    newTab.document.open();
-    newTab.document.write(html);
-    newTab.document.close();
+  const url = window.location.origin + "/settings/index.html";
 
-    window.location.href = 'https://www.google.com';
-  }, 50);
+  newTab.document.write(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>Settings</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+          html, body {
+            margin: 0;
+            height: 100%;
+            background: #0f0f0f;
+          }
+          iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+          }
+        </style>
+      </head>
+      <body>
+        <iframe src="${url}"></iframe>
+      </body>
+    </html>
+  `);
+
+  newTab.document.close();
+
+  window.location.replace("https://www.google.com");
 }
 
 // 🔹 DOM Ready
@@ -89,7 +110,7 @@ window.addEventListener("DOMContentLoaded", () => {
   document.body.classList.add("fade-in");
 
   loadNav();
-  setupTransitions(); // ✅ ONLY place it's called
+  setupTransitions();
 
   const isWebApp = detectWebAppMode();
   const cloakButton = document.querySelector('.setting-card:first-child button');
@@ -117,11 +138,15 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 🔥 Cloak button (WITH TRANSITION)
+  // 🔥 Cloak button (MOBILE SAFE)
   if (cloakButton) {
     cloakButton.addEventListener('click', () => {
       if (!webAppToggle.checked) {
-        fadeThen(openCloak);
+        fadeThen(() => {
+          requestAnimationFrame(() => {
+            openCloak();
+          });
+        });
       } else {
         showPopup('This Setting Cannot Be Activated Due To Web-App Mode');
       }
@@ -136,7 +161,11 @@ window.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem('autoCloak', autoCloakToggle.checked);
 
       if (autoCloakToggle.checked && !webAppToggle.checked) {
-        fadeThen(openCloak);
+        fadeThen(() => {
+          requestAnimationFrame(() => {
+            openCloak();
+          });
+        });
       } else if (webAppToggle.checked) {
         autoCloakToggle.checked = false;
         showPopup('This Setting Cannot Be Activated Due To Web-App Mode');
@@ -144,7 +173,11 @@ window.addEventListener("DOMContentLoaded", () => {
     });
 
     if (autoCloakToggle.checked && !webAppToggle.checked) {
-      fadeThen(openCloak);
+      fadeThen(() => {
+        requestAnimationFrame(() => {
+          openCloak();
+        });
+      });
     }
   }
 
