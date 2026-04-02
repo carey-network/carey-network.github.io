@@ -1,50 +1,67 @@
-// ----------------------
-// Load Utility Nav
-// ----------------------
+// main.js
+
+// 🔹 Load the utility bar / nav
 async function loadNav() {
   const res = await fetch("/components/nav.html");
   const data = await res.text();
   document.getElementById("nav-container").innerHTML = data;
+
+  // Highlight the current icon
+  const icons = document.querySelectorAll(".utility-icon");
+  const currentPath = window.location.pathname;
+
+  icons.forEach(icon => {
+    const iconPath = new URL(icon.href).pathname;
+    if (iconPath === currentPath) {
+      icon.classList.add("active");
+    }
+  });
+
+  // Attach page transitions AFTER nav loads
+  setupTransitions();
 }
 
-// ----------------------
-// Web-App Auto Toggle
-// ----------------------
-function setupWebAppAutoToggle() {
-  const isWebApp = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-  const toggle = document.getElementById('webapp-toggle');
-  if (toggle) toggle.checked = isWebApp;
-}
-
-// ----------------------
-// Page Link Transitions
-// (Optional: keep fade-in/fade-out for links)
-// ----------------------
+// 🔹 Smooth page transitions
 function setupTransitions() {
   document.querySelectorAll("a").forEach(link => {
     if (link.hostname === window.location.hostname) {
       link.addEventListener("click", function(e) {
         const target = this.href;
         const current = window.location.href;
+
         if (target === current || this.getAttribute("href") === "#") return;
 
         e.preventDefault();
+        document.body.classList.remove("fade-in");
+        document.body.classList.add("fade-out");
 
-        // Fade-out (optional)
-        document.body.style.transition = "opacity 0.3s ease";
-        document.body.style.opacity = 0;
-
-        setTimeout(() => window.location.href = target, 300);
+        setTimeout(() => {
+          window.location.href = target;
+        }, 500);
       });
     }
   });
 }
 
-// ----------------------
-// Initialize
-// ----------------------
+// 🔹 Detect if site is running as a mobile web app
+function detectWebAppMode() {
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+                       || window.navigator.standalone === true;
+
+  // Automatically check the Web-App Mode toggle if present
+  const webAppToggle = document.querySelector('.setting-card:last-child input[type="checkbox"]');
+  if (webAppToggle) {
+    webAppToggle.checked = isStandalone;
+  }
+}
+
+// 🔹 DOM Ready
 document.addEventListener("DOMContentLoaded", () => {
+  // Initial fade-in
+  document.body.classList.remove("fade-out");
+  document.body.classList.add("fade-in");
+
   loadNav();
-  setupWebAppAutoToggle(); // ✅ Auto toggle checkbox
   setupTransitions();
+  detectWebAppMode(); // 🔹 Auto-toggle Web-App Mode if needed
 });
