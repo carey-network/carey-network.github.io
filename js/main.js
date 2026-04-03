@@ -60,7 +60,6 @@ window.onload = () => {
 
   popupClose.addEventListener('click', () => popup.classList.remove('show'));
 
-  // 🔹 Web app logic
   if (isWebApp) {
     webAppToggle.checked = true;
     webAppToggle.disabled = true;
@@ -72,7 +71,6 @@ window.onload = () => {
     webAppToggle.disabled = true;
   }
 
-  // 🔹 Block settings when web-app mode is on
   [cloakButton, autoCloakToggle].forEach(el => {
     if (!el) return;
     el.addEventListener('click', e => {
@@ -84,7 +82,6 @@ window.onload = () => {
     });
   });
 
-  // 🔹 Auto Cloak toggle (no cloak logic)
   if (autoCloakToggle) {
     autoCloakToggle.checked = localStorage.getItem('autoCloak') === 'true';
 
@@ -98,7 +95,6 @@ window.onload = () => {
     });
   }
 
-  // 🔹 Panic toggle
   if (panicButtonToggle) {
     panicButtonToggle.checked = localStorage.getItem('panicButton') === 'true';
     panicButtonToggle.addEventListener('change', () => {
@@ -106,7 +102,6 @@ window.onload = () => {
     });
   }
 
-  // 🔥 Cloak button (popup only)
   if (cloakButton) {
     cloakButton.addEventListener('click', () => {
       if (!webAppToggle.checked) {
