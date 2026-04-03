@@ -57,7 +57,7 @@
   box-shadow: 0 0 12px #e65c00, 0 0 25px rgba(230,92,0,0.5);
 }
 
-/* ✅ FIXED BUTTON COLOR */
+/* ✅ CORRECT BUTTON COLOR */
 .setting-card button {
   padding: 16px 32px;
   border:none;
@@ -76,7 +76,7 @@
   box-shadow: 0 0 20px #fff, 0 0 40px #e65c00;
 }
 
-/* ORIGINAL GLOW TOGGLE */
+/* Glow Toggle */
 .toggle-switch {
   position: relative;
   width: 70px;
@@ -173,9 +173,29 @@ input:checked + .slider:before {
   </section>
 </main>
 
+<!-- ✅ NAV CONTAINER -->
+<div id="nav-container"></div>
+
+<footer class="site-footer">
+  <p>&copy; 2026 The Carey Network — All rights reserved.</p>
+</footer>
+
+<!-- ✅ LOAD NAVBAR -->
+<script>
+fetch('/components/nav.html')
+  .then(res => res.text())
+  .then(data => {
+    document.getElementById('nav-container').innerHTML = data;
+  });
+</script>
+
+<!-- MAIN -->
 <script src="/js/main.js"></script>
+
+<!-- PANIC -->
 <script src="/js/panic.js" defer></script>
 
+<!-- SETTINGS SYNC -->
 <script>
 const panicToggle = document.getElementById("panicToggle");
 
