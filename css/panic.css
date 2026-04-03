@@ -3,29 +3,23 @@
   position: fixed;
   bottom: 20px;
   right: 20px;
-
   width: 65px;
   height: 65px;
   border-radius: 50%;
-
   background-color: #e65c00;
   background-image: url("/images/panicbutton.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: 65%;
-
   z-index: 9999;
   display: none;
-
   cursor: grab;
-
   user-select: none;
   -webkit-user-select: none;
   touch-action: none;
 
-  /* ✅ THINNER GLOW */
-  box-shadow: 0 0 6px #e65c00, 0 0 12px rgba(230,92,0,0.5);
-
+  /* thinner glow */
+  box-shadow: 0 0 4px #e65c00, 0 0 8px rgba(230,92,0,0.4);
   transition: transform 0.15s ease, opacity 0.2s ease;
 }
 
@@ -44,19 +38,14 @@
   position: fixed;
   width: 260px;
   max-width: 80vw;
-
   background: rgba(17,17,17,0.95);
   border-radius: 18px;
   padding: 18px;
-
   display: none;
   flex-direction: column;
   gap: 15px;
-
   z-index: 10000;
-
   box-shadow: 0 0 20px #e65c00, 0 0 40px rgba(230,92,0,0.5);
-
   animation: panicPop 0.2s ease;
 }
 
@@ -65,14 +54,59 @@
   to { opacity: 1; transform: scale(1); }
 }
 
-/* Sections */
-.panic-section {
-  font-size: 0.9rem;
-  color: #aaa;
+/* Menu header with close button */
+#panic-menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
+
+#panic-menu-header button {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+/* Sections */
+.panic-section { font-size: 0.9rem; color: #aaa; }
 
 /* Size buttons */
 .panic-options {
+  display: flex;
+  gap: 8px;
+}
+
+.panic-options button {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  border-radius: 10px;
+  background: #222;
+  color: #fff;
+  cursor: pointer;
+}
+
+.panic-options button.active {
+  background: #e65c00;
+  box-shadow: 0 0 8px #e65c00;
+}
+
+/* Lock toggle */
+.panic-lock {
+  display: flex;
+  justify-content: space-between;
+  background: #1a1a1a;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* Slider */
+#panic-opacity {
+  width: 100%;
+}.panic-options {
   display: flex;
   gap: 8px;
 }
