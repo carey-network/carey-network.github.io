@@ -18,26 +18,37 @@
   display: none;
 
   cursor: grab;
-  user-select: none;
 
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  /* 🔥 FIX MOBILE SELECTION */
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+
+  transition: transform 0.15s ease, opacity 0.2s ease;
 
   box-shadow: 0 0 12px #e65c00, 0 0 25px rgba(230,92,0,0.6);
 }
 
 #panic-btn:active {
-  transform: scale(1.1);
+  transform: scale(1.08);
   cursor: grabbing;
 }
 
-#panic-btn:hover {
-  box-shadow: 0 0 20px #fff, 0 0 40px #e65c00;
+/* ✅ REAL SIZE CHANGES */
+.panic-small {
+  width: 45px;
+  height: 45px;
 }
 
-/* Sizes */
-.panic-small { width: 45px; height: 45px; }
-.panic-medium { width: 65px; height: 65px; }
-.panic-large { width: 85px; height: 85px; }
+.panic-medium {
+  width: 65px;
+  height: 65px;
+}
+
+.panic-large {
+  width: 90px;
+  height: 90px;
+}
 
 /* ===== MENU ===== */
 #panic-menu {
@@ -71,7 +82,7 @@
   color: #aaa;
 }
 
-/* Size buttons */
+/* Buttons */
 .panic-options {
   display: flex;
   gap: 8px;
@@ -84,8 +95,6 @@
   border-radius: 10px;
   background: #222;
   color: #fff;
-  cursor: pointer;
-  transition: 0.2s;
 }
 
 .panic-options button.active {
@@ -93,33 +102,18 @@
   box-shadow: 0 0 10px #e65c00;
 }
 
+/* Lock toggle */
+.panic-lock {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #1a1a1a;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
 /* Slider */
 #panic-opacity {
   width: 100%;
-}
-
-/* Mode list */
-.panic-list {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  max-height: 120px;
-  overflow-y: auto;
-}
-
-.panic-item {
-  padding: 10px;
-  border-radius: 10px;
-  background: #1a1a1a;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.panic-item:hover {
-  background: rgba(230,92,0,0.2);
-}
-
-.panic-item.active {
-  background: #e65c00;
-  box-shadow: 0 0 10px #e65c00;
 }
