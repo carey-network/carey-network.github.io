@@ -199,14 +199,26 @@ fetch('/components/nav.html')
 <script>
 const panicToggle = document.getElementById("panicToggle");
 
+function updatePanicVisibility() {
+  const btn = document.getElementById("panic-btn");
+  if (!btn) return;
+
+  const enabled = localStorage.getItem("panicEnabled") === "true";
+  btn.style.display = enabled ? "flex" : "none";
+}
+
 if (panicToggle) {
   const saved = localStorage.getItem("panicEnabled") === "true";
   panicToggle.checked = saved;
 
   panicToggle.addEventListener("change", () => {
     localStorage.setItem("panicEnabled", panicToggle.checked);
+    updatePanicVisibility(); // 🔥 THIS IS THE FIX
   });
 }
+
+/* also run once in case */
+window.addEventListener("load", updatePanicVisibility);
 </script>
 
 </body>
