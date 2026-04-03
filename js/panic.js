@@ -1,3 +1,4 @@
+/* ===== CREATE ELEMENTS ===== */
 const btn = document.createElement("div");
 btn.id = "panic-btn";
 
@@ -28,7 +29,7 @@ menu.innerHTML = `
 document.body.appendChild(btn);
 document.body.appendChild(menu);
 
-/* ===== LOAD SETTINGS ===== */
+/* ===== SETTINGS ===== */
 function applySettings() {
   const enabled = localStorage.getItem("panicEnabled") === "true";
   const size = localStorage.getItem("panicSize") || "medium";
@@ -41,9 +42,13 @@ function applySettings() {
 
   document.getElementById("panic-opacity").value = opacity;
   document.getElementById("lock-state").textContent = locked ? "ON" : "OFF";
+
+  document.querySelectorAll("[data-size]").forEach(b => {
+    b.classList.toggle("active", b.dataset.size === size);
+  });
 }
 
-/* ===== SIZE ===== */
+/* ===== INTERACTIONS ===== */
 document.addEventListener("click", (e) => {
   if (e.target.dataset.size) {
     localStorage.setItem("panicSize", e.target.dataset.size);
@@ -51,7 +56,6 @@ document.addEventListener("click", (e) => {
   }
 });
 
-/* ===== OPACITY ===== */
 document.addEventListener("input", (e) => {
   if (e.target.id === "panic-opacity") {
     localStorage.setItem("panicOpacity", e.target.value);
@@ -59,49 +63,70 @@ document.addEventListener("input", (e) => {
   }
 });
 
-/* ===== LOCK ===== */
 document.getElementById("panic-lock").onclick = () => {
   const locked = localStorage.getItem("panicLocked") === "true";
   localStorage.setItem("panicLocked", !locked);
   applySettings();
 };
 
-/* ===== DRAG SYSTEM (FIXED) ===== */
+/* ===== DRAG + HOLD ===== */
 let dragging = false;
 let moved = false;
+let holdTimer = null;
+
+let startX = 0;
+let startY = 0;
 let offsetX = 0;
 let offsetY = 0;
 
-btn.addEventListener("mousedown", startDrag);
-btn.addEventListener("touchstart", startDrag, { passive: false });
+btn.addEventListener("mousedown", startInteraction);
+btn.addEventListener("touchstart", startInteraction, { passive: false });
 
-function startDrag(e) {
+function startInteraction(e) {
   const locked = localStorage.getItem("panicLocked") === "true";
   if (locked) return;
 
-  dragging = true;
+  dragging = false;
   moved = false;
 
   const rect = btn.getBoundingClientRect();
+
   const clientX = e.touches ? e.touches[0].clientX : e.clientX;
   const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+  startX = clientX;
+  startY = clientY;
 
   offsetX = clientX - rect.left;
   offsetY = clientY - rect.top;
 
+  holdTimer = setTimeout(() => {
+    if (!moved) openMenu();
+  }, 1500);
+
   e.preventDefault();
 }
 
-document.addEventListener("mousemove", drag);
-document.addEventListener("touchmove", drag, { passive: false });
+document.addEventListener("mousemove", moveInteraction);
+document.addEventListener("touchmove", moveInteraction, { passive: false });
 
-function drag(e) {
-  if (!dragging) return;
-
-  moved = true;
+function moveInteraction(e) {
+  if (!holdTimer) return;
 
   const clientX = e.touches ? e.touches[0].clientX : e.clientX;
   const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+  const dx = Math.abs(clientX - startX);
+  const dy = Math.abs(clientY - startY);
+
+  if (dx > 6 || dy > 6) {
+    dragging = true;
+    moved = true;
+    clearTimeout(holdTimer);
+    holdTimer = null;
+  }
+
+  if (!dragging) return;
 
   btn.style.left = clientX - offsetX + "px";
   btn.style.top = clientY - offsetY + "px";
@@ -111,29 +136,16 @@ function drag(e) {
   e.preventDefault();
 }
 
-document.addEventListener("mouseup", stopDrag);
-document.addEventListener("touchend", stopDrag);
+document.addEventListener("mouseup", endInteraction);
+document.addEventListener("touchend", endInteraction);
 
-function stopDrag() {
+function endInteraction() {
+  clearTimeout(holdTimer);
+  holdTimer = null;
   dragging = false;
 }
 
-/* ===== HOLD MENU (FIXED MOBILE) ===== */
-let holdTimer;
-
-btn.addEventListener("touchstart", startHold, { passive: false });
-btn.addEventListener("mousedown", startHold);
-
-function startHold(e) {
-  holdTimer = setTimeout(() => {
-    if (!dragging && !moved) openMenu();
-  }, 1500);
-}
-
-btn.addEventListener("touchend", () => clearTimeout(holdTimer));
-btn.addEventListener("mouseup", () => clearTimeout(holdTimer));
-
-/* ===== MENU POSITION ===== */
+/* ===== MENU ===== */
 function openMenu() {
   menu.style.display = "flex";
 
@@ -148,17 +160,15 @@ function openMenu() {
   menu.style.top = y + "px";
 }
 
-/* CLOSE MENU */
 document.addEventListener("click", (e) => {
   if (!menu.contains(e.target) && e.target !== btn) {
     menu.style.display = "none";
   }
 });
 
-/* ===== PANIC CLICK (FIXED) ===== */
+/* ===== PANIC CLICK ===== */
 btn.addEventListener("click", () => {
-  if (moved) return; // 🔥 prevents accidental click after drag
-
+  if (moved) return;
   window.location.href = "about:blank";
 });
 
