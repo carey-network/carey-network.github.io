@@ -14,18 +14,15 @@ async function loadNav() {
   });
 }
 
-// 🔥 GLOBAL TRANSITIONS (WORKS EVERYWHERE NOW)
+// 🔥 GLOBAL TRANSITIONS (works on all links)
 function setupTransitions() {
   document.addEventListener("click", function(e) {
     const link = e.target.closest("a");
     if (!link) return;
 
-    // same-origin only
     if (link.hostname !== window.location.hostname) return;
 
     const href = link.getAttribute("href");
-
-    // ignore bad links
     if (!href || href === "#" || link.href === window.location.href) return;
 
     e.preventDefault();
@@ -36,7 +33,7 @@ function setupTransitions() {
   });
 }
 
-// 🔥 RELIABLE FADE
+// 🔥 CLEAN FADE HANDLER
 function fadeThen(callback) {
   document.body.classList.remove("fade-in");
   document.body.classList.add("fade-out");
@@ -64,45 +61,25 @@ function showPopup(msg) {
   popup.classList.add('show');
 }
 
-// 🔥 FIXED CLOAK (NO BLACK SCREEN)
+// 🔥 MOBILE-SAFE CLOAK (FINAL FIX)
 function openCloak() {
-  const newTab = window.open('about:blank', '_blank');
+  const cloakURL = window.location.origin + "/settings/index.html";
 
-  if (!newTab) {
-    showPopup('Popup blocked! Allow popups to use Cloak.');
-    return;
-  }
+  // Preload page
+  const iframe = document.createElement("iframe");
+  iframe.src = cloakURL;
+  iframe.style.display = "none";
+  document.body.appendChild(iframe);
 
-  const url = window.location.origin + "/settings/index.html";
+  setTimeout(() => {
+    const newTab = window.open(cloakURL, "_blank");
 
-  newTab.document.write(`
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <title>Settings</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <style>
-          html, body {
-            margin: 0;
-            height: 100%;
-            background: #0f0f0f;
-          }
-          iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-          }
-        </style>
-      </head>
-      <body>
-        <iframe src="${url}"></iframe>
-      </body>
-    </html>
-  `);
-
-  newTab.document.close();
-
-  window.location.replace("https://www.google.com");
+    if (newTab) {
+      window.location.replace("https://www.google.com");
+    } else {
+      window.location.href = cloakURL;
+    }
+  }, 150);
 }
 
 // 🔹 DOM Ready
@@ -138,7 +115,7 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 🔥 Cloak button (MOBILE SAFE)
+  // 🔥 Cloak button
   if (cloakButton) {
     cloakButton.addEventListener('click', () => {
       if (!webAppToggle.checked) {
