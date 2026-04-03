@@ -1,125 +1,165 @@
-/* ===== PANIC BUTTON ===== */
-#panic-btn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
+const panicToggle = document.getElementById("panicToggle");
 
-  width: 65px;
-  height: 65px;
-  border-radius: 50%;
+/* ===== CREATE BUTTON ===== */
+const btn = document.createElement("div");
+btn.id = "panic-btn";
 
-  background-color: #e65c00;
-  background-image: url("/images/panicbutton.png");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 65%;
+const menu = document.createElement("div");
+menu.id = "panic-menu";
 
-  z-index: 9999;
-  display: none;
+menu.innerHTML = `
+<div>
+  <div class="panic-section">Size</div>
+  <div class="panic-options">
+    <button data-size="small">S</button>
+    <button data-size="medium">M</button>
+    <button data-size="large">L</button>
+  </div>
+</div>
 
-  cursor: grab;
-  user-select: none;
+<div>
+  <div class="panic-section">Transparency</div>
+  <input type="range" id="panic-opacity" min="5" max="100">
+</div>
 
-  transition: transform 0.2s ease, opacity 0.2s ease;
+<div>
+  <div class="panic-section">Mode</div>
+  <div class="panic-list">
+    <div class="panic-item" data-mode="blank">Blank Tab</div>
+    <div class="panic-item" data-mode="google">Google</div>
+    <div class="panic-item" data-mode="hide">Hide Page</div>
+  </div>
+</div>
+`;
 
-  box-shadow: 0 0 12px #e65c00, 0 0 25px rgba(230,92,0,0.6);
+document.body.appendChild(btn);
+document.body.appendChild(menu);
+
+/* ===== LOAD SETTINGS ===== */
+function loadSettings() {
+  const enabled = localStorage.getItem("panicEnabled") === "true";
+  const size = localStorage.getItem("panicSize") || "medium";
+  const opacity = localStorage.getItem("panicOpacity") || 100;
+  const mode = localStorage.getItem("panicMode") || "blank";
+
+  btn.style.display = enabled ? "flex" : "none";
+
+  btn.className = "";
+  btn.classList.add(`panic-${size}`);
+
+  btn.style.opacity = opacity / 100;
+
+  document.getElementById("panic-opacity").value = opacity;
+
+  document.querySelectorAll("[data-size]").forEach(b => {
+    b.classList.toggle("active", b.dataset.size === size);
+  });
+
+  document.querySelectorAll("[data-mode]").forEach(m => {
+    m.classList.toggle("active", m.dataset.mode === mode);
+  });
 }
 
-#panic-btn:active {
-  transform: scale(1.1);
-  cursor: grabbing;
+/* ===== SETTINGS ===== */
+document.addEventListener("click", (e) => {
+
+  if (e.target.dataset.size) {
+    const size = e.target.dataset.size;
+    localStorage.setItem("panicSize", size);
+
+    btn.className = "";
+    btn.classList.add(`panic-${size}`);
+
+    document.querySelectorAll("[data-size]").forEach(b => b.classList.remove("active"));
+    e.target.classList.add("active");
+  }
+
+  if (e.target.dataset.mode) {
+    const mode = e.target.dataset.mode;
+    localStorage.setItem("panicMode", mode);
+
+    document.querySelectorAll("[data-mode]").forEach(m => m.classList.remove("active"));
+    e.target.classList.add("active");
+  }
+});
+
+document.addEventListener("input", (e) => {
+  if (e.target.id === "panic-opacity") {
+    localStorage.setItem("panicOpacity", e.target.value);
+    btn.style.opacity = e.target.value / 100;
+  }
+});
+
+/* ===== DRAG + HOLD ===== */
+let isDragging = false;
+let holdTimer;
+
+btn.addEventListener("mousedown", startHold);
+btn.addEventListener("touchstart", startHold);
+
+function startHold() {
+  isDragging = false;
+
+  holdTimer = setTimeout(() => {
+    if (!isDragging) openMenu();
+  }, 1500);
 }
 
-#panic-btn:hover {
-  box-shadow: 0 0 20px #fff, 0 0 40px #e65c00;
+document.addEventListener("mousemove", drag);
+document.addEventListener("touchmove", drag);
+
+function drag(e) {
+  if (!holdTimer) return;
+
+  isDragging = true;
+  clearTimeout(holdTimer);
+
+  let x = e.touches ? e.touches[0].clientX : e.clientX;
+  let y = e.touches ? e.touches[0].clientY : e.clientY;
+
+  btn.style.left = x - btn.offsetWidth / 2 + "px";
+  btn.style.top = y - btn.offsetHeight / 2 + "px";
+  btn.style.right = "auto";
+  btn.style.bottom = "auto";
 }
 
-/* Sizes */
-.panic-small { width: 45px; height: 45px; }
-.panic-medium { width: 65px; height: 65px; }
-.panic-large { width: 85px; height: 85px; }
+document.addEventListener("mouseup", stop);
+document.addEventListener("touchend", stop);
 
-/* ===== MENU ===== */
-#panic-menu {
-  position: fixed;
-  width: 260px;
-  max-width: 80vw;
-
-  background: rgba(17,17,17,0.95);
-  border-radius: 18px;
-  padding: 18px;
-
-  display: none;
-  flex-direction: column;
-  gap: 15px;
-
-  z-index: 10000;
-
-  box-shadow: 0 0 25px #e65c00, 0 0 50px rgba(230,92,0,0.6);
-
-  animation: panicPop 0.2s ease;
+function stop() {
+  clearTimeout(holdTimer);
 }
 
-@keyframes panicPop {
-  from { opacity: 0; transform: scale(0.85); }
-  to { opacity: 1; transform: scale(1); }
+/* ===== MENU POSITION ===== */
+function openMenu() {
+  menu.style.display = "flex";
+
+  let rect = btn.getBoundingClientRect();
+  let x = rect.left;
+  let y = rect.top - 260;
+
+  if (x + 260 > window.innerWidth) x = window.innerWidth - 270;
+  if (y < 0) y = rect.bottom + 10;
+
+  menu.style.left = x + "px";
+  menu.style.top = y + "px";
 }
 
-/* Sections */
-.panic-section {
-  font-size: 0.9rem;
-  color: #aaa;
-}
+/* CLOSE MENU */
+document.addEventListener("click", (e) => {
+  if (!menu.contains(e.target) && e.target !== btn) {
+    menu.style.display = "none";
+  }
+});
 
-/* Size buttons */
-.panic-options {
-  display: flex;
-  gap: 8px;
-}
+/* ===== PANIC ACTION ===== */
+btn.addEventListener("click", () => {
+  const mode = localStorage.getItem("panicMode");
 
-.panic-options button {
-  flex: 1;
-  padding: 8px;
-  border: none;
-  border-radius: 10px;
-  background: #222;
-  color: #fff;
-  cursor: pointer;
-  transition: 0.2s;
-}
+  if (mode === "google") window.location.href = "https://google.com";
+  if (mode === "blank") window.location.href = "about:blank";
+  if (mode === "hide") document.body.style.display = "none";
+});
 
-.panic-options button.active {
-  background: #e65c00;
-  box-shadow: 0 0 10px #e65c00;
-}
-
-/* Slider */
-#panic-opacity {
-  width: 100%;
-}
-
-/* Mode list */
-.panic-list {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  max-height: 120px;
-  overflow-y: auto;
-}
-
-.panic-item {
-  padding: 10px;
-  border-radius: 10px;
-  background: #1a1a1a;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.panic-item:hover {
-  background: rgba(230,92,0,0.2);
-}
-
-.panic-item.active {
-  background: #e65c00;
-  box-shadow: 0 0 10px #e65c00;
-}
+/* INIT */
+loadSettings();
