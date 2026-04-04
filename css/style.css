@@ -4,22 +4,19 @@
   padding:0;
   box-sizing:border-box;
   font-family:"Inter",sans-serif;
-  font-size: 16px; /* slightly larger base font */
+  font-size: 16px;
 }
 
 /* ---- Body and Page Transitions ---- */
 body {
   background:#000;
   color:#fff;
-  line-height:1.7;e/* ===== PANIC BUTTON ===== */
-/* ===== PANIC BUTTON ===== */
-#panic-btn {
-position: fixed;
-bottom: 20px;
-@@ -109,239 +96,3 @@ body {
-#panic-opacity {
-width: 100%;
-}
+  line-height:1.7;
+  font-size:1.05rem;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
   padding-bottom:120px;
   opacity:0;
   transition: opacity 0.5s ease;
@@ -210,17 +207,23 @@ body.fade-out footer {
   box-shadow:0 2px 6px rgba(0,0,0,0.4);
 }
 
-input:checked + .slider { background:#e65c00; box-shadow:0 0 10px rgba(230,92,0,0.7), inset 0 2px 4px rgba(0,0,0,0.6); }
-input:checked + .slider:before { transform: translateX(34px); box-shadow:0 0 8px rgba(255,255,255,0.6); }
+input:checked + .slider {
+  background:#e65c00;
+  box-shadow:0 0 10px rgba(230,92,0,0.7), inset 0 2px 4px rgba(0,0,0,0.6);
+  animation: glowPulse 1.5s infinite alternate;
+}
+
+input:checked + .slider:before {
+  transform: translateX(34px);
+  box-shadow:0 0 8px rgba(255,255,255,0.6);
+}
 
 .toggle-switch:hover .slider { box-shadow:0 0 12px rgba(230,92,0,0.6), inset 0 2px 4px rgba(0,0,0,0.6); }
 .toggle-switch:hover .slider:before { box-shadow:0 0 12px rgba(255,255,255,0.7); }
 
-input:checked + .slider { animation: glowPulse 1.5s infinite alternate; }
-
 @keyframes glowPulse {
-  0% { box-shadow:0 0 8px rgba(230,92,0,0.7), inset 0 2px 4px rgba(0,0,0,0.6); }
-  50% { box-shadow:0 0 16px rgba(230,92,0,0.9), inset 0 2px 4px rgba(0,0,0,0.6); }
+  0%   { box-shadow:0 0 8px rgba(230,92,0,0.7), inset 0 2px 4px rgba(0,0,0,0.6); }
+  50%  { box-shadow:0 0 16px rgba(230,92,0,0.9), inset 0 2px 4px rgba(0,0,0,0.6); }
   100% { box-shadow:0 0 8px rgba(230,92,0,0.7), inset 0 2px 4px rgba(0,0,0,0.6); }
 }
 
@@ -250,9 +253,11 @@ input:checked + .slider { animation: glowPulse 1.5s infinite alternate; }
 .popup-overlay.show .popup-content { transform:translateY(0); opacity:1; }
 
 .popup-content p { font-size:1.3rem; font-weight:700; margin-bottom:30px; line-height:1.3; }
+
 .popup-content button {
   padding:18px 40px; border:none; border-radius:16px;
   background:#e65c00; color:#fff; font-weight:700; font-size:1.4rem;
   cursor:pointer; transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
 }
+
 .popup-content button:hover { transform:scale(1.05); box-shadow:0 0 25px #fff,0 0 50px rgba(230,92,0,0.7); }
