@@ -1,9 +1,7 @@
-/* ===== GLOBAL MOBILE FIX ===== */
 * {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* ===== PANIC BUTTON ===== */
 #panic-btn {
   position: fixed;
   bottom: 20px;
@@ -28,28 +26,23 @@
   touch-action: none;
 
   transform: translateZ(0);
-  -webkit-transform: translateZ(0);
   will-change: transform;
 
-  transition: opacity 0.2s ease, width 0.2s ease, height 0.2s ease;
+  transition: all 0.2s ease;
 
   box-shadow:
     0 0 10px rgba(230,92,0,0.6),
-    0 0 25px rgba(230,92,0,0.35),
-    0 0 50px rgba(230,92,0,0.2);
+    0 0 25px rgba(230,92,0,0.35);
 }
 
 #panic-btn:active {
   transform: scale(1.08);
-  cursor: grabbing;
 }
 
-/* ===== SIZE ===== */
 .panic-small  { width: 40px; height: 40px; }
-.panic-medium { width: 58px; height: 58px; }
-.panic-large  { width: 78px; height: 78px; }
+.panic-medium { width: 60px; height: 60px; }
+.panic-large  { width: 80px; height: 80px; }
 
-/* ===== MENU ===== */
 #panic-menu {
   position: fixed;
   width: 260px;
@@ -70,9 +63,6 @@
     0 0 40px rgba(230,92,0,0.2);
 
   animation: panicPop 0.2s ease;
-
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 @keyframes panicPop {
@@ -80,17 +70,13 @@
   to   { opacity: 1; transform: scale(1); }
 }
 
-/* ===== SECTION LABEL ===== */
 .panic-section {
   font-size: 0.78rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: #666;
   margin-bottom: 6px;
 }
 
-/* ===== OPTIONS ===== */
 .panic-options {
   display: flex;
   gap: 6px;
@@ -98,7 +84,7 @@
 
 .panic-options button {
   flex: 1;
-  padding: 8px 4px;
+  padding: 8px;
 
   border: 1px solid #2a2a2a;
   border-radius: 10px;
@@ -106,118 +92,34 @@
   background: #1a1a1a;
   color: #aaa;
 
-  font-size: 0.82rem;
-  font-weight: 600;
-
   cursor: pointer;
-
   transition: all 0.2s ease;
-
-  -webkit-tap-highlight-color: transparent;
 }
 
-/* HOVER */
-.panic-options button:hover {
-  background: #222;
-  color: #fff;
-  border-color: rgba(230,92,0,0.4);
-}
-
-/* 🔥 ACTIVE (FIXED — ALWAYS WINS) */
 .panic-options button.active {
   background: #e65c00 !important;
   color: #fff !important;
   border-color: #e65c00 !important;
-
   box-shadow: 0 0 10px rgba(230,92,0,0.8);
-
-  transform: scale(1.05);
 }
 
-/* ===== LOCK ===== */
 .panic-lock {
   display: flex;
-  align-items: center;
   justify-content: space-between;
 
   background: #1a1a1a;
   border: 1px solid #2a2a2a;
 
-  padding: 10px 12px;
+  padding: 10px;
   border-radius: 10px;
 
   cursor: pointer;
-
-  font-size: 0.88rem;
-  color: #aaa;
-
-  transition: all 0.2s ease;
-
-  -webkit-tap-highlight-color: transparent;
-}
-
-.panic-lock:hover {
-  background: #222;
-  color: #fff;
 }
 
 #lock-state {
-  font-weight: 700;
-  font-size: 0.78rem;
-  letter-spacing: 0.06em;
   color: #e65c00;
 }
 
-/* ===== SLIDER ===== */
-.panic-slider-wrap {
-  padding: 4px 0;
-}
-
 #panic-opacity {
-  -webkit-appearance: none;
-  appearance: none;
-
   width: 100%;
-  height: 6px;
-
-  border-radius: 6px;
-
-  background: linear-gradient(
-    to right,
-    #e65c00 0%,
-    #e65c00 calc(var(--val, 100) * 1%),
-    #2a2a2a calc(var(--val, 100) * 1%),
-    #2a2a2a 100%
-  );
-
-  outline: none;
-  cursor: pointer;
-}
-
-#panic-opacity::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-
-  width: 18px;
-  height: 18px;
-
-  border-radius: 50%;
-  background: #fff;
-
-  box-shadow:
-    0 0 6px rgba(230,92,0,0.7),
-    0 1px 4px rgba(0,0,0,0.5);
-
-  cursor: pointer;
-}
-
-#panic-opacity::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
-  border: none;
-
-  border-radius: 50%;
-  background: #fff;
-
-  box-shadow: 0 0 6px rgba(230,92,0,0.7);
 }
