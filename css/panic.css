@@ -3,8 +3,6 @@
   position: fixed;
   bottom: 20px;
   right: 20px;
-  width: 65px;
-  height: 65px;
   border-radius: 50%;
   background-color: #e65c00;
   background-image: url("/images/panicbutton.png");
@@ -18,7 +16,6 @@
   -webkit-user-select: none;
   touch-action: none;
   transition: transform 0.15s ease, opacity 0.2s ease;
-  /* Slimmer ring: tight inner glow only, no wide outer bloom */
   box-shadow: 0 0 0 2px rgba(230,92,0,0.6), 0 0 8px rgba(230,92,0,0.4);
 }
 #panic-btn:active {
