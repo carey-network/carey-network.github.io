@@ -1,223 +1,235 @@
-/* ===== GLOBAL MOBILE FIX ===== */
-* {
-  -webkit-tap-highlight-color: transparent;
+const btn = document.createElement("div");
+btn.id = "panic-btn";
+
+const menu = document.createElement("div");
+menu.id = "panic-menu";
+
+menu.innerHTML = `
+<div>
+  <div class="panic-section">Action</div>
+  <div class="panic-options">
+    <button data-action="classroom">Class</button>
+    <button data-action="slides">Slides</button>
+    <button data-action="docs">Docs</button>
+  </div>
+</div>
+
+<div>
+  <div class="panic-section">Size</div>
+  <div class="panic-options">
+    <button data-size="small">S</button>
+    <button data-size="medium">M</button>
+    <button data-size="large">L</button>
+  </div>
+</div>
+
+<div>
+  <div class="panic-section">Transparency</div>
+  <div class="panic-slider-wrap">
+    <input type="range" id="panic-opacity" min="5" max="100">
+  </div>
+</div>
+
+<div class="panic-lock" id="panic-lock">
+  <span>Lock Position</span>
+  <span id="lock-state">OFF</span>
+</div>
+`;
+
+document.body.appendChild(btn);
+document.body.appendChild(menu);
+
+/* ===== CONFIG ===== */
+const SIZE_MAP = { small: 45, medium: 65, large: 90 };
+
+const ACTION_MAP = {
+  classroom: "https://classroom.google.com",
+  slides: "https://docs.google.com/presentation",
+  docs: "https://docs.google.com/document"
+};
+
+/* ===== APPLY SETTINGS ===== */
+function applySettings() {
+  const enabled = localStorage.getItem("panicEnabled") === "true";
+  const size = localStorage.getItem("panicSize") || "medium";
+  const opacity = localStorage.getItem("panicOpacity") || 100;
+  const locked = localStorage.getItem("panicLocked") === "true";
+  const action = localStorage.getItem("panicAction") || "classroom";
+  const savedX = localStorage.getItem("panicX");
+  const savedY = localStorage.getItem("panicY");
+
+  btn.style.display = enabled ? "flex" : "none";
+
+  const dim = SIZE_MAP[size];
+  btn.style.width = dim + "px";
+  btn.style.height = dim + "px";
+
+  btn.style.opacity = opacity / 100;
+
+  if (savedX && savedY) {
+    btn.style.left = savedX + "px";
+    btn.style.top = savedY + "px";
+    btn.style.right = "auto";
+    btn.style.bottom = "auto";
+  }
+
+  // ✅ FIX ACTIVE STATES
+  document.querySelectorAll("[data-size]").forEach(b => {
+    b.classList.toggle("active", b.dataset.size === size);
+  });
+
+  document.querySelectorAll("[data-action]").forEach(b => {
+    b.classList.toggle("active", b.dataset.action === action);
+  });
+
+  document.getElementById("lock-state").textContent = locked ? "ON" : "OFF";
+
+  const slider = document.getElementById("panic-opacity");
+  if (slider) {
+    slider.value = opacity;
+    slider.style.setProperty("--val", opacity);
+  }
 }
 
-/* ===== PANIC BUTTON ===== */
-#panic-btn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
+/* ===== SIZE (FIXED BUG) ===== */
+document.addEventListener("click", (e) => {
+  if (!e.target.dataset.size) return;
 
-  border-radius: 50%;
-  background-color: #e65c00;
-  background-image: url("/images/panicbutton.png");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 60%;
+  const newSize = e.target.dataset.size;
+  const rect = btn.getBoundingClientRect();
 
-  z-index: 9999;
-  display: none;
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
 
-  cursor: grab;
+  const newDim = SIZE_MAP[newSize]; // ✅ FIXED
 
-  user-select: none;
-  -webkit-user-select: none;
-  -webkit-touch-callout: none;
+  btn.style.width = newDim + "px";
+  btn.style.height = newDim + "px";
 
-  touch-action: none;
+  const newLeft = centerX - newDim / 2;
+  const newTop = centerY - newDim / 2;
 
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
-  will-change: transform;
+  btn.style.left = newLeft + "px";
+  btn.style.top = newTop + "px";
 
-  transition: opacity 0.2s ease, width 0.2s ease, height 0.2s ease;
+  localStorage.setItem("panicSize", newSize);
+  localStorage.setItem("panicX", newLeft);
+  localStorage.setItem("panicY", newTop);
 
-  box-shadow:
-    0 0 10px rgba(230,92,0,0.6),
-    0 0 25px rgba(230,92,0,0.35),
-    0 0 50px rgba(230,92,0,0.2);
-}
+  applySettings(); // ✅ ensures orange highlight updates
+});
 
-#panic-btn:active {
-  transform: scale(1.08);
-  cursor: grabbing;
-}
+/* ===== ACTION ===== */
+document.addEventListener("click", (e) => {
+  if (!e.target.dataset.action) return;
 
-/* ===== SIZE ===== */
-.panic-small  { width: 40px; height: 40px; }
-.panic-medium { width: 58px; height: 58px; }
-.panic-large  { width: 78px; height: 78px; }
+  localStorage.setItem("panicAction", e.target.dataset.action);
+  applySettings(); // ✅ FIX highlight
+});
 
-/* ===== MENU ===== */
-#panic-menu {
-  position: fixed;
-  width: 260px;
-  max-width: 80vw;
-
-  background: rgba(17,17,17,0.97);
-  border-radius: 18px;
-  padding: 18px;
-
-  display: none;
-  flex-direction: column;
-  gap: 14px;
-
-  z-index: 10000;
-
-  box-shadow:
-    0 0 20px rgba(230,92,0,0.5),
-    0 0 40px rgba(230,92,0,0.2);
-
-  animation: panicPop 0.2s ease;
-
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-@keyframes panicPop {
-  from { opacity: 0; transform: scale(0.85); }
-  to   { opacity: 1; transform: scale(1); }
-}
-
-/* ===== SECTION LABEL ===== */
-.panic-section {
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #666;
-  margin-bottom: 6px;
-}
-
-/* ===== OPTIONS ===== */
-.panic-options {
-  display: flex;
-  gap: 6px;
-}
-
-.panic-options button {
-  flex: 1;
-  padding: 8px 4px;
-
-  border: 1px solid #2a2a2a;
-  border-radius: 10px;
-
-  background: #1a1a1a;
-  color: #aaa;
-
-  font-size: 0.82rem;
-  font-weight: 600;
-
-  cursor: pointer;
-
-  transition: all 0.2s ease;
-
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* HOVER */
-.panic-options button:hover {
-  background: #222;
-  color: #fff;
-  border-color: rgba(230,92,0,0.4);
-}
-
-/* 🔥 ACTIVE (FIXED — ALWAYS WINS) */
-.panic-options button.active {
-  background: #e65c00 !important;
-  color: #fff !important;
-  border-color: #e65c00 !important;
-
-  box-shadow: 0 0 10px rgba(230,92,0,0.8);
-
-  transform: scale(1.05);
-}
+/* ===== OPACITY ===== */
+document.addEventListener("input", (e) => {
+  if (e.target.id === "panic-opacity") {
+    localStorage.setItem("panicOpacity", e.target.value);
+    btn.style.opacity = e.target.value / 100;
+    e.target.style.setProperty("--val", e.target.value);
+  }
+});
 
 /* ===== LOCK ===== */
-.panic-lock {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+document.getElementById("panic-lock").onclick = () => {
+  const locked = localStorage.getItem("panicLocked") === "true";
+  localStorage.setItem("panicLocked", String(!locked));
+  applySettings();
+};
 
-  background: #1a1a1a;
-  border: 1px solid #2a2a2a;
+/* ===== DRAG (MOBILE FIX ONLY) ===== */
+let dragging = false;
+let offsetX = 0;
+let offsetY = 0;
+let dragMoved = false;
 
-  padding: 10px 12px;
-  border-radius: 10px;
+btn.addEventListener("pointerdown", (e) => {
+  if (localStorage.getItem("panicLocked") === "true") return;
 
-  cursor: pointer;
+  dragging = true;
+  dragMoved = false;
 
-  font-size: 0.88rem;
-  color: #aaa;
+  const rect = btn.getBoundingClientRect();
+  offsetX = e.clientX - rect.left;
+  offsetY = e.clientY - rect.top;
 
-  transition: all 0.2s ease;
+  btn.setPointerCapture(e.pointerId);
+});
 
-  -webkit-tap-highlight-color: transparent;
+btn.addEventListener("pointermove", (e) => {
+  if (!dragging) return;
+
+  dragMoved = true;
+
+  btn.style.left = (e.clientX - offsetX) + "px";
+  btn.style.top = (e.clientY - offsetY) + "px";
+});
+
+btn.addEventListener("pointerup", () => {
+  if (dragging && dragMoved) {
+    localStorage.setItem("panicX", parseFloat(btn.style.left));
+    localStorage.setItem("panicY", parseFloat(btn.style.top));
+  }
+  dragging = false;
+});
+
+/* ===== HOLD MENU (v1 behavior, FIXED) ===== */
+let holdTimer;
+let menuJustOpened = false;
+
+btn.addEventListener("pointerdown", () => {
+  holdTimer = setTimeout(() => {
+    if (!dragMoved) {
+      menuJustOpened = true;
+      openMenu();
+    }
+  }, 600);
+});
+
+btn.addEventListener("pointerup", () => clearTimeout(holdTimer));
+
+function openMenu() {
+  menu.style.display = "flex";
+
+  const rect = btn.getBoundingClientRect();
+  let x = rect.left;
+  let y = rect.top - 310;
+
+  if (x + 260 > window.innerWidth) x = window.innerWidth - 270;
+  if (y < 0) y = rect.bottom + 10;
+
+  menu.style.left = x + "px";
+  menu.style.top = y + "px";
 }
 
-.panic-lock:hover {
-  background: #222;
-  color: #fff;
-}
+/* ===== CLOSE MENU ===== */
+document.addEventListener("click", (e) => {
+  if (!menu.contains(e.target) && e.target !== btn) {
+    menu.style.display = "none";
+  }
+});
 
-#lock-state {
-  font-weight: 700;
-  font-size: 0.78rem;
-  letter-spacing: 0.06em;
-  color: #e65c00;
-}
+/* ===== PANIC CLICK ===== */
+btn.addEventListener("click", () => {
+  if (dragMoved) {
+    dragMoved = false;
+    return;
+  }
 
-/* ===== SLIDER ===== */
-.panic-slider-wrap {
-  padding: 4px 0;
-}
+  if (menuJustOpened) {
+    menuJustOpened = false;
+    return;
+  }
 
-#panic-opacity {
-  -webkit-appearance: none;
-  appearance: none;
+  const action = localStorage.getItem("panicAction") || "classroom";
+  window.location.href = ACTION_MAP[action];
+});
 
-  width: 100%;
-  height: 6px;
-
-  border-radius: 6px;
-
-  background: linear-gradient(
-    to right,
-    #e65c00 0%,
-    #e65c00 calc(var(--val, 100) * 1%),
-    #2a2a2a calc(var(--val, 100) * 1%),
-    #2a2a2a 100%
-  );
-
-  outline: none;
-  cursor: pointer;
-}
-
-#panic-opacity::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-
-  width: 18px;
-  height: 18px;
-
-  border-radius: 50%;
-  background: #fff;
-
-  box-shadow:
-    0 0 6px rgba(230,92,0,0.7),
-    0 1px 4px rgba(0,0,0,0.5);
-
-  cursor: pointer;
-}
-
-#panic-opacity::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
-  border: none;
-
-  border-radius: 50%;
-  background: #fff;
-
-  box-shadow: 0 0 6px rgba(230,92,0,0.7);
-}
+/* ===== INIT ===== */
+applySettings();
