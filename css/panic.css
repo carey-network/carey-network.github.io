@@ -14,10 +14,15 @@
   cursor: grab;
   user-select: none;
   -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
   touch-action: none;
-  transition: transform 0.15s ease, opacity 0.2s ease, width 0.2s ease, height 0.2s ease;
-  /* Subtle glow — no hard ring */
-  box-shadow: 0 0 14px rgba(230,92,0,0.55), 0 0 30px rgba(230,92,0,0.2);
+  /* Force GPU compositing layer — fixes iOS touch coordinate offset */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: transform;
+  transition: opacity 0.2s ease, width 0.2s ease, height 0.2s ease;
+  /* Subtle glow only — no ring */
+  box-shadow: 0 0 8px rgba(230,92,0,0.35);
 }
 
 #panic-btn:active {
