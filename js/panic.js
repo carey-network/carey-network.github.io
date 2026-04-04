@@ -39,13 +39,11 @@ function applySettings() {
 
   btn.style.display = enabled ? "flex" : "none";
 
-  // Remove all size classes then apply correct one
   btn.classList.remove("panic-small", "panic-medium", "panic-large");
   btn.classList.add(`panic-${size}`);
 
   btn.style.opacity = opacity / 100;
 
-  // Restore saved position
   if (savedX && savedY) {
     btn.style.left   = savedX + "px";
     btn.style.top    = savedY + "px";
@@ -59,7 +57,6 @@ function applySettings() {
   const lockEl = document.getElementById("lock-state");
   if (lockEl) lockEl.textContent = locked ? "ON" : "OFF";
 
-  // Mark active size button
   document.querySelectorAll(".panic-options button").forEach(b => {
     b.classList.toggle("active", b.dataset.size === size);
   });
@@ -90,10 +87,10 @@ document.getElementById("panic-lock").onclick = () => {
 
 /* ===== DRAG SYSTEM ===== */
 let dragging  = false;
-let dragMoved = false; // distance moved during THIS drag gesture
+let dragMoved = false;
 let offsetX   = 0;
 let offsetY   = 0;
-const DRAG_THRESHOLD = 6; // px — below this we treat it as a tap/hold
+const DRAG_THRESHOLD = 6;
 
 btn.addEventListener("mousedown",  startDrag);
 btn.addEventListener("touchstart", startDrag, { passive: false });
@@ -127,7 +124,6 @@ function drag(e) {
   const newLeft = clientX - offsetX;
   const newTop  = clientY - offsetY;
 
-  // Only count as a real drag once threshold is crossed
   const dx = newLeft - (parseFloat(btn.style.left) || 0);
   const dy = newTop  - (parseFloat(btn.style.top)  || 0);
   if (Math.abs(dx) > DRAG_THRESHOLD || Math.abs(dy) > DRAG_THRESHOLD) {
@@ -147,22 +143,15 @@ document.addEventListener("touchend", stopDrag);
 
 function stopDrag() {
   if (dragging && dragMoved) {
-    // Persist position so it survives page reload
     localStorage.setItem("panicX", parseFloat(btn.style.left));
     localStorage.setItem("panicY", parseFloat(btn.style.top));
   }
   dragging = false;
-  // NOTE: dragMoved is intentionally NOT reset here —
-  // it's reset at the start of the NEXT mousedown/touchstart.
 }
 
 /* ===== HOLD MENU ===== */
-// We open the menu on a long-press ONLY if the pointer didn't travel
-// more than DRAG_THRESHOLD px. We check dragMoved inside the timer
-// callback using a closure reference that is always fresh.
-
-let holdTimer       = null;
-let menuJustOpened  = false; // prevents click firing right after hold releases
+let holdTimer      = null;
+let menuJustOpened = false;
 
 btn.addEventListener("touchstart", startHold, { passive: false });
 btn.addEventListener("mousedown",  startHold);
