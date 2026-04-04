@@ -1,36 +1,40 @@
-/* ===== PANIC BUTTON ===== */
 #panic-btn {
   position: fixed;
   bottom: 20px;
   right: 20px;
   border-radius: 50%;
-  background-color: #e65c00;
+
+  /* slimmer look */
+  background-color: transparent;
+  border: 2px solid #e65c00;
+
   background-image: url("/images/panicbutton.png");
   background-position: center;
   background-repeat: no-repeat;
-  background-size: 65%;
+  background-size: 55%;
+
   z-index: 9999;
   display: none;
+
   cursor: grab;
-  user-select: none;
-  -webkit-user-select: none;
-  -webkit-tap-highlight-color: transparent;
   touch-action: none;
-  /* Force GPU compositing layer — fixes iOS touch coordinate offset */
-  -webkit-transform: translateZ(0);
+
   transform: translateZ(0);
   will-change: transform;
-  transition: opacity 0.2s ease, width 0.2s ease, height 0.2s ease;
-  /* Subtle glow only — no ring */
-  box-shadow: 0 0 8px rgba(230,92,0,0.35);
+
+  transition: all 0.2s ease;
+
+  /* glow instead of fill */
+  box-shadow:
+    0 0 6px rgba(230,92,0,0.6),
+    0 0 14px rgba(230,92,0,0.3);
 }
 
 #panic-btn:active {
   transform: scale(1.08);
-  cursor: grabbing;
 }
 
-/* Size classes — width/height only, no !important needed since base has none */
+/* sizes */
 .panic-small  { width: 45px; height: 45px; }
 .panic-medium { width: 65px; height: 65px; }
 .panic-large  { width: 90px; height: 90px; }
