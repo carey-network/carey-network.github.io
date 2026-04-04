@@ -1,4 +1,3 @@
-/* Panic Button Container */
 #panic-btn {
   position: fixed;
   bottom: 20px;
@@ -6,32 +5,26 @@
   width: 65px;
   height: 65px;
   border-radius: 50%;
-  background: transparent; /* no solid ring */
   display: none;
   z-index: 9999;
   cursor: grab;
   touch-action: none;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
-  -webkit-user-select: none;
-  box-sizing: border-box;
-  padding: 0;
-  transition: transform 0.15s ease, opacity 0.2s ease;
-  box-shadow: 0 0 10px #e65c00; /* orange glow */
+  box-shadow: 0 0 12px #e65c00; /* orange glow */
+  transition: transform 0.1s ease, opacity 0.2s ease;
 }
 
-/* Panic PNG */
+#panic-btn.dragging {
+  cursor: grabbing;
+}
+
 #panic-btn img {
   width: 100%;
   height: 100%;
-  border-radius: 50%;
   display: block;
   pointer-events: none;
-}
-
-/* Drag active */
-#panic-btn.dragging {
-  cursor: grabbing;
+  border-radius: 50%;
 }
 
 /* Sizes */
@@ -39,7 +32,7 @@
 .panic-medium { width: 65px; height: 65px; }
 .panic-large { width: 90px; height: 90px; }
 
-/* ===== MENU ===== */
+/* Menu */
 #panic-menu {
   position: fixed;
   width: 260px;
@@ -49,7 +42,7 @@
   padding: 18px;
   display: none;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
   z-index: 10000;
   box-shadow: 0 0 20px #e65c00, 0 0 40px rgba(230,92,0,0.5);
   animation: panicPop 0.2s ease;
@@ -60,7 +53,6 @@
   to { opacity: 1; transform: scale(1); }
 }
 
-/* Menu header with close button */
 #panic-menu-header {
   display: flex;
   justify-content: space-between;
@@ -75,20 +67,17 @@
   cursor: pointer;
 }
 
-/* Sections */
 .panic-section { font-size: 0.9rem; color: #aaa; }
-
-/* Size buttons */
 .panic-options {
   display: flex;
-  gap: 8px;
+  gap: 6px;
 }
 
 .panic-options button {
   flex: 1;
-  padding: 8px;
+  padding: 6px;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   background: #222;
   color: #fff;
   cursor: pointer;
@@ -99,17 +88,11 @@
   box-shadow: 0 0 8px #e65c00;
 }
 
-/* Lock toggle */
 .panic-lock {
   display: flex;
   justify-content: space-between;
   background: #1a1a1a;
-  padding: 10px;
-  border-radius: 10px;
+  padding: 8px;
+  border-radius: 8px;
   cursor: pointer;
-}
-
-/* Slider */
-#panic-opacity {
-  width: 100%;
 }
