@@ -57,16 +57,15 @@
   box-shadow: 0 0 12px #e65c00, 0 0 25px rgba(230,92,0,0.5);
 }
 
-/* ✅ CORRECT BUTTON COLOR */
 .setting-card button {
   padding: 16px 32px;
-  border:none;
-  border-radius:14px;
-  background:#e65c00;
-  color:#fff;
-  font-weight:700;
-  font-size:1.2rem;
-  cursor:pointer;
+  border: none;
+  border-radius: 14px;
+  background: #e65c00;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.2rem;
+  cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
   box-shadow: 0 0 12px #e65c00, 0 0 25px rgba(230,92,0,0.5);
 }
@@ -121,13 +120,19 @@ input:checked + .slider {
 input:checked + .slider:before {
   transform: translateX(34px);
 }
+
+@keyframes glowPulse {
+  0%   { box-shadow: 0 0 8px rgba(230,92,0,0.7); }
+  50%  { box-shadow: 0 0 16px rgba(230,92,0,0.9); }
+  100% { box-shadow: 0 0 8px rgba(230,92,0,0.7); }
+}
 </style>
 </head>
 
 <body>
 
 <header class="site-header">
-  <img src="../images/logo.png" />
+  <img src="../images/logo.png" class="logo" />
 </header>
 
 <main>
@@ -167,14 +172,14 @@ input:checked + .slider:before {
   </section>
 </main>
 
-<!-- ✅ NAV CONTAINER -->
+<!-- NAV CONTAINER -->
 <div id="nav-container"></div>
 
 <footer class="site-footer">
   <p>&copy; 2026 The Carey Network — All rights reserved.</p>
 </footer>
 
-<!-- ===== LOAD NAVBAR ===== -->
+<!-- LOAD NAVBAR -->
 <script>
 fetch('/components/nav.html')
   .then(res => res.text())
@@ -183,32 +188,29 @@ fetch('/components/nav.html')
   });
 </script>
 
-<!-- ===== MAIN JS ===== -->
+<!-- MAIN -->
 <script src="/js/main.js"></script>
 
-<!-- ===== PANIC JS ===== -->
+<!-- PANIC (defer so DOM is ready) -->
 <script src="/js/panic.js" defer></script>
 
-<!-- ===== SETTINGS SYNC ===== -->
-<script>
-const panicToggle = document.getElementById("panicToggle");
+<!-- SETTINGS SYNC (defer keeps load order consistent with panic.js) -->
+<script defer>
+document.addEventListener("DOMContentLoaded", () => {
+  const panicToggle = document.getElementById("panicToggle");
+  if (!panicToggle) return;
 
-function updatePanicVisibility() {
-  const btn = document.getElementById("panic-btn");
-  if (!btn) return;
-  const enabled = panicToggle.checked;
-  btn.style.display = enabled ? "flex" : "none";
-  localStorage.setItem("panicEnabled", enabled);
-}
+  // Reflect saved state on page load
+  panicToggle.checked = localStorage.getItem("panicEnabled") === "true";
 
-// ✅ Load stored value
-if (panicToggle) {
-  const saved = localStorage.getItem("panicEnabled") === "true";
-  panicToggle.checked = saved;
-  updatePanicVisibility();
+  panicToggle.addEventListener("change", () => {
+    localStorage.setItem("panicEnabled", panicToggle.checked);
 
-  panicToggle.addEventListener("change", updatePanicVisibility);
-}
+    // Tell panic.js to re-read settings immediately
+    // (panic.js exposes nothing globally, so we fire a custom event)
+    window.dispatchEvent(new Event("panicSettingsChanged"));
+  });
+});
 </script>
 
 </body>
