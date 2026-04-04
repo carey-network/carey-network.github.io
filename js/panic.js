@@ -51,8 +51,6 @@ function applySettings() {
   const enabled = localStorage.getItem("panicEnabled") === "true";
   const size = localStorage.getItem("panicSize") || "medium";
   const opacity = localStorage.getItem("panicOpacity") || 100;
-  const locked = localStorage.getItem("panicLocked") === "true";
-  const action = localStorage.getItem("panicAction") || "classroom";
   const savedX = localStorage.getItem("panicX");
   const savedY = localStorage.getItem("panicY");
 
@@ -74,26 +72,10 @@ function applySettings() {
     btn.style.right = "auto";
     btn.style.bottom = "auto";
   }
-
-  document.querySelectorAll("[data-size]").forEach(b =>
-    b.classList.toggle("active", b.dataset.size === size)
-  );
-
-  document.querySelectorAll("[data-action]").forEach(b =>
-    b.classList.toggle("active", b.dataset.action === action)
-  );
-
-  document.getElementById("lock-state").textContent = locked ? "ON" : "OFF";
-
-  const opacityEl = document.getElementById("panic-opacity");
-  if (opacityEl) {
-    opacityEl.value = opacity;
-    opacityEl.style.setProperty("--val", opacity);
-  }
 }
 
 /* =========================
-   SIZE (FIXED)
+   SIZE FIX
 ========================= */
 document.addEventListener("click", (e) => {
   if (!e.target.dataset.size) return;
@@ -105,8 +87,6 @@ document.addEventListener("click", (e) => {
   const centerY = rect.top + rect.height / 2;
 
   const newDim = SIZE_MAP[newSize];
-
-  localStorage.setItem("panicSize", newSize);
 
   btn.className = "";
   btn.id = "panic-btn";
@@ -121,58 +101,67 @@ document.addEventListener("click", (e) => {
   btn.style.left = newLeft + "px";
   btn.style.top = newTop + "px";
 
+  localStorage.setItem("panicSize", newSize);
   localStorage.setItem("panicX", newLeft);
   localStorage.setItem("panicY", newTop);
 });
 
 /* =========================
-   DRAG + HOLD SYSTEM
+   DRAG + HOLD (CLEAN)
 ========================= */
 let dragging = false;
 let moved = false;
 let holdTimer = null;
+let startX = 0;
+let startY = 0;
 let offsetX = 0;
 let offsetY = 0;
 
-const HOLD_TIME = 500;
+const HOLD_TIME = 550;
 const MOVE_THRESHOLD = 6;
 
-btn.addEventListener("pointerdown", (e) => {
-  if (localStorage.getItem("panicLocked") === "true") return;
+function start(e) {
+  const touch = e.touches ? e.touches[0] : e;
 
   dragging = true;
   moved = false;
 
+  startX = touch.clientX;
+  startY = touch.clientY;
+
   const rect = btn.getBoundingClientRect();
-  offsetX = e.clientX - rect.left;
-  offsetY = e.clientY - rect.top;
+  offsetX = touch.clientX - rect.left;
+  offsetY = touch.clientY - rect.top;
 
   holdTimer = setTimeout(() => {
     if (!moved) openMenu();
   }, HOLD_TIME);
 
-  btn.setPointerCapture(e.pointerId);
-});
+  e.preventDefault();
+}
 
-btn.addEventListener("pointermove", (e) => {
+function move(e) {
   if (!dragging) return;
 
-  const left = e.clientX - offsetX;
-  const top = e.clientY - offsetY;
+  const touch = e.touches ? e.touches[0] : e;
 
-  if (
-    Math.abs(left - (parseFloat(btn.style.left) || 0)) > MOVE_THRESHOLD ||
-    Math.abs(top - (parseFloat(btn.style.top) || 0)) > MOVE_THRESHOLD
-  ) {
+  const dx = Math.abs(touch.clientX - startX);
+  const dy = Math.abs(touch.clientY - startY);
+
+  if (dx > MOVE_THRESHOLD || dy > MOVE_THRESHOLD) {
     moved = true;
     clearTimeout(holdTimer);
   }
 
-  btn.style.left = left + "px";
-  btn.style.top = top + "px";
-});
+  if (moved) {
+    btn.style.left = (touch.clientX - offsetX) + "px";
+    btn.style.top = (touch.clientY - offsetY) + "px";
+  }
 
-btn.addEventListener("pointerup", () => {
+  e.preventDefault();
+}
+
+function end() {
   clearTimeout(holdTimer);
 
   if (dragging && moved) {
@@ -181,7 +170,16 @@ btn.addEventListener("pointerup", () => {
   }
 
   dragging = false;
-});
+}
+
+btn.addEventListener("mousedown", start);
+btn.addEventListener("touchstart", start, { passive: false });
+
+document.addEventListener("mousemove", move);
+document.addEventListener("touchmove", move, { passive: false });
+
+document.addEventListener("mouseup", end);
+document.addEventListener("touchend", end);
 
 /* =========================
    MENU
@@ -207,7 +205,7 @@ document.addEventListener("click", (e) => {
 });
 
 /* =========================
-   CLICK ACTION
+   CLICK
 ========================= */
 btn.addEventListener("click", () => {
   if (moved) return;
@@ -215,29 +213,6 @@ btn.addEventListener("click", () => {
   const action = localStorage.getItem("panicAction") || "classroom";
   window.location.href = ACTION_MAP[action];
 });
-
-/* =========================
-   ACTION + OPACITY + LOCK
-========================= */
-document.addEventListener("click", (e) => {
-  if (e.target.dataset.action) {
-    localStorage.setItem("panicAction", e.target.dataset.action);
-  }
-});
-
-document.addEventListener("input", (e) => {
-  if (e.target.id === "panic-opacity") {
-    localStorage.setItem("panicOpacity", e.target.value);
-    btn.style.opacity = e.target.value / 100;
-    e.target.style.setProperty("--val", e.target.value);
-  }
-});
-
-document.getElementById("panic-lock").onclick = () => {
-  const locked = localStorage.getItem("panicLocked") === "true";
-  localStorage.setItem("panicLocked", String(!locked));
-  applySettings();
-};
 
 /* INIT */
 applySettings();
