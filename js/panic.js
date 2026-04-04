@@ -1,3 +1,4 @@
+// ===== CREATE ELEMENTS =====
 const btn = document.createElement("div");
 btn.id = "panic-btn";
 
@@ -39,7 +40,7 @@ menu.innerHTML = `
 document.body.appendChild(btn);
 document.body.appendChild(menu);
 
-/* ===== CONFIG ===== */
+// ===== CONFIG =====
 const SIZE_MAP = { small: 45, medium: 65, large: 90 };
 
 const ACTION_MAP = {
@@ -48,32 +49,24 @@ const ACTION_MAP = {
   docs: "https://docs.google.com/document"
 };
 
-/* ===== APPLY SETTINGS ===== */
+// ===== FORCE ENABLE (FIXES "NOT SHOWING") =====
+if (localStorage.getItem("panicEnabled") === null) {
+  localStorage.setItem("panicEnabled", "true");
+}
+
+// ===== APPLY SETTINGS =====
 function applySettings() {
   const size = localStorage.getItem("panicSize") || "medium";
   const opacity = localStorage.getItem("panicOpacity") || 100;
-  const locked = localStorage.getItem("panicLocked") === "true";
   const action = localStorage.getItem("panicAction") || "classroom";
-  const savedX = localStorage.getItem("panicX");
-  const savedY = localStorage.getItem("panicY");
 
-  // ✅ ALWAYS SHOW
   btn.style.display = "flex";
 
   const dim = SIZE_MAP[size];
   btn.style.width = dim + "px";
   btn.style.height = dim + "px";
-
   btn.style.opacity = opacity / 100;
 
-  if (savedX && savedY) {
-    btn.style.left = savedX + "px";
-    btn.style.top = savedY + "px";
-    btn.style.right = "auto";
-    btn.style.bottom = "auto";
-  }
-
-  // ACTIVE STATES
   document.querySelectorAll("[data-size]").forEach(b => {
     b.classList.toggle("active", b.dataset.size === size);
   });
@@ -82,44 +75,26 @@ function applySettings() {
     b.classList.toggle("active", b.dataset.action === action);
   });
 
-  document.getElementById("lock-state").textContent = locked ? "ON" : "OFF";
-
   const slider = document.getElementById("panic-opacity");
-  if (slider) {
-    slider.value = opacity;
-    slider.style.setProperty("--val", opacity);
-  }
+  if (slider) slider.value = opacity;
 }
 
-/* ===== SIZE ===== */
+// ===== SIZE =====
 document.addEventListener("click", (e) => {
   if (!e.target.dataset.size) return;
 
   const newSize = e.target.dataset.size;
-  const rect = btn.getBoundingClientRect();
-
-  const centerX = rect.left + rect.width / 2;
-  const centerY = rect.top + rect.height / 2;
-
-  const newDim = SIZE_MAP[newSize];
-
-  btn.style.width = newDim + "px";
-  btn.style.height = newDim + "px";
-
-  const newLeft = centerX - newDim / 2;
-  const newTop = centerY - newDim / 2;
-
-  btn.style.left = newLeft + "px";
-  btn.style.top = newTop + "px";
+  const dim = SIZE_MAP[newSize];
 
   localStorage.setItem("panicSize", newSize);
-  localStorage.setItem("panicX", newLeft);
-  localStorage.setItem("panicY", newTop);
+
+  btn.style.width = dim + "px";
+  btn.style.height = dim + "px";
 
   applySettings();
 });
 
-/* ===== ACTION ===== */
+// ===== ACTION =====
 document.addEventListener("click", (e) => {
   if (!e.target.dataset.action) return;
 
@@ -127,33 +102,21 @@ document.addEventListener("click", (e) => {
   applySettings();
 });
 
-/* ===== OPACITY ===== */
+// ===== OPACITY =====
 document.addEventListener("input", (e) => {
   if (e.target.id === "panic-opacity") {
-    localStorage.setItem("panicOpacity", e.target.value);
     btn.style.opacity = e.target.value / 100;
-    e.target.style.setProperty("--val", e.target.value);
+    localStorage.setItem("panicOpacity", e.target.value);
   }
 });
 
-/* ===== LOCK ===== */
-document.getElementById("panic-lock").onclick = () => {
-  const locked = localStorage.getItem("panicLocked") === "true";
-  localStorage.setItem("panicLocked", String(!locked));
-  applySettings();
-};
-
-/* ===== DRAG (SMOOTH + MOBILE FIX) ===== */
+// ===== DRAG (SMOOTH) =====
 let dragging = false;
 let offsetX = 0;
 let offsetY = 0;
-let dragMoved = false;
 
 btn.addEventListener("pointerdown", (e) => {
-  if (localStorage.getItem("panicLocked") === "true") return;
-
   dragging = true;
-  dragMoved = false;
 
   const rect = btn.getBoundingClientRect();
   offsetX = e.clientX - rect.left;
@@ -165,71 +128,49 @@ btn.addEventListener("pointerdown", (e) => {
 btn.addEventListener("pointermove", (e) => {
   if (!dragging) return;
 
-  dragMoved = true;
-
   btn.style.left = (e.clientX - offsetX) + "px";
   btn.style.top = (e.clientY - offsetY) + "px";
+  btn.style.right = "auto";
+  btn.style.bottom = "auto";
 });
 
 btn.addEventListener("pointerup", () => {
-  if (dragMoved) {
-    localStorage.setItem("panicX", parseFloat(btn.style.left));
-    localStorage.setItem("panicY", parseFloat(btn.style.top));
-  }
   dragging = false;
 });
 
-/* ===== HOLD MENU ===== */
-let holdTimer;
-let menuJustOpened = false;
+// ===== HOLD MENU =====
+let holdTimer = null;
 
 btn.addEventListener("pointerdown", () => {
   holdTimer = setTimeout(() => {
-    if (!dragMoved) {
-      menuJustOpened = true;
-      openMenu();
-    }
-  }, 600);
+    openMenu();
+  }, 500);
 });
 
-btn.addEventListener("pointerup", () => clearTimeout(holdTimer));
+btn.addEventListener("pointerup", () => {
+  clearTimeout(holdTimer);
+});
 
+// ===== MENU =====
 function openMenu() {
   menu.style.display = "flex";
 
   const rect = btn.getBoundingClientRect();
-  let x = rect.left;
-  let y = rect.top - 310;
-
-  if (x + 260 > window.innerWidth) x = window.innerWidth - 270;
-  if (y < 0) y = rect.bottom + 10;
-
-  menu.style.left = x + "px";
-  menu.style.top = y + "px";
+  menu.style.left = rect.left + "px";
+  menu.style.top = (rect.top - 300) + "px";
 }
 
-/* ===== CLOSE MENU ===== */
 document.addEventListener("click", (e) => {
   if (!menu.contains(e.target) && e.target !== btn) {
     menu.style.display = "none";
   }
 });
 
-/* ===== PANIC CLICK ===== */
+// ===== CLICK ACTION =====
 btn.addEventListener("click", () => {
-  if (dragMoved) {
-    dragMoved = false;
-    return;
-  }
-
-  if (menuJustOpened) {
-    menuJustOpened = false;
-    return;
-  }
-
   const action = localStorage.getItem("panicAction") || "classroom";
   window.location.href = ACTION_MAP[action];
 });
 
-/* ===== INIT ===== */
+// ===== INIT =====
 applySettings();
