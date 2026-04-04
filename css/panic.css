@@ -15,7 +15,104 @@
   user-select: none;
   -webkit-user-select: none;
   touch-action: none;
+  transition: transform 0.15s ease, opacity 0.2s ease;/* ===== PANIC BUTTON ===== */
+#panic-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  border-radius: 50%;
+  background-color: #e65c00;
+  background-image: url("/images/panicbutton.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 65%;
+  z-index: 9999;
+  display: none;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
   transition: transform 0.15s ease, opacity 0.2s ease;
+  box-shadow: 0 0 0 2px rgba(230,92,0,0.6), 0 0 8px rgba(230,92,0,0.4);
+}
+#panic-btn:active {
+  transform: scale(1.08);
+  cursor: grabbing;
+}
+
+/* ✅ REAL SIZE CHANGES */
+.panic-small {
+  width: 45px;
+  height: 45px;
+}
+.panic-medium {
+  width: 65px;
+  height: 65px;
+}
+.panic-large {
+  width: 90px;
+  height: 90px;
+}
+
+/* ===== MENU ===== */
+#panic-menu {
+  position: fixed;
+  width: 260px;
+  max-width: 80vw;
+  background: rgba(17,17,17,0.95);
+  border-radius: 18px;
+  padding: 18px;
+  display: none;
+  flex-direction: column;
+  gap: 15px;
+  z-index: 10000;
+  box-shadow: 0 0 25px #e65c00, 0 0 50px rgba(230,92,0,0.6);
+  animation: panicPop 0.2s ease;
+}
+@keyframes panicPop {
+  from { opacity: 0; transform: scale(0.85); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Sections */
+.panic-section {
+  font-size: 0.9rem;
+  color: #aaa;
+}
+
+/* Buttons */
+.panic-options {
+  display: flex;
+  gap: 8px;
+}
+.panic-options button {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  border-radius: 10px;
+  background: #222;
+  color: #fff;
+}
+.panic-options button.active {
+  background: #e65c00;
+  box-shadow: 0 0 10px #e65c00;
+}
+
+/* Lock toggle */
+.panic-lock {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #1a1a1a;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* Slider */
+#panic-opacity {
+  width: 100%;
+}
   box-shadow: 0 0 0 2px rgba(230,92,0,0.6), 0 0 8px rgba(230,92,0,0.4);
 }
 #panic-btn:active {
