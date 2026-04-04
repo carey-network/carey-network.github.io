@@ -6,7 +6,7 @@
   width: 65px;
   height: 65px;
   border-radius: 50%;
-  background-color: #e65c00; /* Orange circle */
+  background: transparent; /* no solid ring */
   display: none;
   z-index: 9999;
   cursor: grab;
@@ -15,8 +15,9 @@
   user-select: none;
   -webkit-user-select: none;
   box-sizing: border-box;
-  padding: 5px; /* spacing for PNG inside */
+  padding: 0;
   transition: transform 0.15s ease, opacity 0.2s ease;
+  box-shadow: 0 0 10px #e65c00; /* orange glow */
 }
 
 /* Panic PNG */
