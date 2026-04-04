@@ -240,6 +240,8 @@ input:checked + .slider:before {
   z-index: 9999;
   cursor: grab;
   user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
 }
 #panic-btn img {
   width: 60px;
