@@ -38,11 +38,70 @@ function detectWebAppMode() {
       || window.navigator.standalone === true;
 }
 
+/* ===== THEMED POPUP (web-app mode blocker) ===== */
+function showCloakBlockedPopup() {
+  if (document.getElementById("cloak-blocked-popup")) return;
+
+  const popup = document.createElement("div");
+  popup.id = "cloak-blocked-popup";
+  popup.style.cssText = [
+    "position:fixed", "inset:0", "z-index:99999",
+    "display:flex", "justify-content:center", "align-items:center",
+    "background:rgba(0,0,0,0.6)",
+    "backdrop-filter:blur(14px)",
+    "-webkit-backdrop-filter:blur(14px)"
+  ].join(";");
+
+  popup.innerHTML = `
+    <div style="
+      background:rgba(17,17,17,0.95);
+      border-radius:22px;
+      padding:40px 36px;
+      max-width:360px;
+      width:88%;
+      text-align:center;
+      color:#fff;
+      font-family:'Inter',sans-serif;
+      box-shadow:0 0 30px #e65c00, 0 0 60px rgba(230,92,0,0.4);
+    ">
+      <div style="font-size:2.4rem;margin-bottom:14px;">🔒</div>
+      <p style="font-size:1.15rem;font-weight:700;margin-bottom:10px;line-height:1.4;">
+        Not Available in Web-App Mode
+      </p>
+      <p style="font-size:0.9rem;color:#aaa;margin-bottom:28px;line-height:1.5;">
+        Cloak features are disabled while running as a standalone web app.
+      </p>
+      <button id="cloak-blocked-close" style="
+        padding:14px 36px;
+        border:none;
+        border-radius:14px;
+        background:#e65c00;
+        color:#fff;
+        font-weight:700;
+        font-size:1rem;
+        cursor:pointer;
+        box-shadow:0 0 12px #e65c00, 0 0 24px rgba(230,92,0,0.5);
+        transition:transform 0.2s, box-shadow 0.2s;
+      ">Got it</button>
+    </div>
+  `;
+
+  document.body.appendChild(popup);
+
+  popup.querySelector("#cloak-blocked-close").addEventListener("click", () => popup.remove());
+  // Also close on backdrop tap
+  popup.addEventListener("click", (e) => { if (e.target === popup) popup.remove(); });
+}
+
 /* ===== CLOAK ===== */
 function openCloak() {
+  if (detectWebAppMode()) {
+    showCloakBlockedPopup();
+    return;
+  }
+
   var win = window.open("", "_blank");
   if (!win) {
-    // Popup blocked — redirect current tab instead
     window.location.replace("https://google.com");
     return;
   }
@@ -53,51 +112,59 @@ function openCloak() {
   win.document.body.style.height = "100vh";
   win.document.body.appendChild(iframe);
   win.document.title = "Google Docs";
-
-  // Redirect original tab to Google so it doesn't sit on the site
   window.location.replace("https://google.com");
 }
 
-// Auto cloak: window.open() is blocked by browsers on page load without
-// a user gesture. Fix: show a fake "loading" overlay immediately —
-// when the user taps it (counts as a gesture) the cloak fires.
+/* ===== AUTO CLOAK ===== */
 function maybeAutoCloak() {
   if (localStorage.getItem("autoCloak") !== "true") return;
 
-  // Build overlay
+  if (detectWebAppMode()) {
+    // Don't show overlay in web-app mode — just silently skip
+    return;
+  }
+
   const overlay = document.createElement("div");
   overlay.id = "cloak-overlay";
   overlay.style.cssText = [
-    "position:fixed",
-    "inset:0",
-    "background:#fff",
+    "position:fixed", "inset:0",
+    "background:linear-gradient(135deg,#e65c00,#000)",
     "z-index:99999",
-    "display:flex",
-    "flex-direction:column",
-    "justify-content:center",
-    "align-items:center",
+    "display:flex", "flex-direction:column",
+    "justify-content:center", "align-items:center",
     "cursor:pointer",
-    "font-family:arial,sans-serif",
-    "color:#444",
-    "user-select:none",
-    "-webkit-user-select:none"
+    "user-select:none", "-webkit-user-select:none"
   ].join(";");
 
-  // Looks like a generic Google loading screen
   overlay.innerHTML = `
-    <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"
-         style="width:180px;margin-bottom:32px;opacity:0.9">
-    <div style="width:40px;height:40px;border:4px solid #f3f3f3;border-top:4px solid #4285f4;
-                border-radius:50%;animation:spin 0.8s linear infinite;"></div>
-    <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+    <div style="
+      text-align:center;
+      color:#fff;
+      font-family:'Inter',sans-serif;
+      pointer-events:none;
+    ">
+      <div style="
+        font-size:3.5rem;
+        font-weight:800;
+        letter-spacing:-0.02em;
+        margin-bottom:14px;
+        text-shadow:0 0 30px rgba(255,255,255,0.3);
+      ">Click to Cloak</div>
+      <div style="
+        font-size:1rem;
+        color:rgba(255,255,255,0.6);
+        font-weight:500;
+        letter-spacing:0.04em;
+      ">Tap anywhere to continue</div>
+    </div>
   `;
 
   document.body.appendChild(overlay);
 
-  // Any interaction triggers the cloak
   function triggerCloak() {
     overlay.removeEventListener("click",      triggerCloak);
     overlay.removeEventListener("touchstart", triggerCloak);
+    overlay.remove();
     openCloak();
   }
 
