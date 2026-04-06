@@ -176,6 +176,25 @@ input:checked + .slider:before {
   <p>&copy; 2026 The Carey Network — All rights reserved.</p>
 </footer>
 
+<!-- Cloak function defined inline so it is always available immediately -->
+<script>
+function openCloak() {
+  var win = window.open("", "_blank");
+  if (!win) {
+    // Popup blocked — just navigate current tab as fallback
+    window.location.href = "https://vnv5.github.io";
+    return;
+  }
+  var iframe = win.document.createElement("iframe");
+  iframe.style.cssText = "position:absolute;top:0;left:0;width:100%;height:100%;border:none;";
+  iframe.src = "https://vnv5.github.io";
+  win.document.body.style.margin = "0";
+  win.document.body.style.height = "100vh";
+  win.document.body.appendChild(iframe);
+  win.document.title = "Google Docs";
+}
+</script>
+
 <!-- main.js handles nav, transitions, panic injection, and toggle sync -->
 <script src="/js/main.js"></script>
 
