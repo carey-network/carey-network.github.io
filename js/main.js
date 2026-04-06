@@ -40,14 +40,13 @@ function detectWebAppMode() {
 
 /* ===== CLOAK ===== */
 function openCloak() {
-  var win = window.open();
+  var win = window.open("", "_blank");
+  if (!win) {
+    window.location.href = "https://vnv5.github.io";
+    return;
+  }
   var iframe = win.document.createElement("iframe");
-  iframe.style.position = "absolute";
-  iframe.style.top      = "0";
-  iframe.style.left     = "0";
-  iframe.style.width    = "100%";
-  iframe.style.height   = "100%";
-  iframe.style.border   = "none";
+  iframe.style.cssText = "position:absolute;top:0;left:0;width:100%;height:100%;border:none;";
   iframe.src = "https://vnv5.github.io";
   win.document.body.style.margin = "0";
   win.document.body.style.height = "100vh";
