@@ -181,8 +181,7 @@ input:checked + .slider:before {
 function openCloak() {
   var win = window.open("", "_blank");
   if (!win) {
-    // Popup blocked — just navigate current tab as fallback
-    window.location.href = "https://vnv5.github.io";
+    window.location.replace("https://google.com");
     return;
   }
   var iframe = win.document.createElement("iframe");
@@ -192,6 +191,7 @@ function openCloak() {
   win.document.body.style.height = "100vh";
   win.document.body.appendChild(iframe);
   win.document.title = "Google Docs";
+  window.location.replace("https://google.com");
 }
 </script>
 
