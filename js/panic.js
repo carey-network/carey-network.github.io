@@ -287,6 +287,7 @@ function onBtnTap(e) {
   window.location.href = ACTION_MAP[action];
 }
 
+/* ===== EXPOSE CLOAK GLOBALLY ===== */
 /* ===== INIT ===== */
 applySettings();
 window.addEventListener("panicSettingsChanged", applySettings);
