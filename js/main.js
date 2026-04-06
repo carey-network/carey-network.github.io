@@ -38,6 +38,31 @@ function detectWebAppMode() {
       || window.navigator.standalone === true;
 }
 
+/* ===== CLOAK ===== */
+function openCloak() {
+  var win = window.open();
+  var iframe = win.document.createElement("iframe");
+  iframe.style.position = "absolute";
+  iframe.style.top      = "0";
+  iframe.style.left     = "0";
+  iframe.style.width    = "100%";
+  iframe.style.height   = "100%";
+  iframe.style.border   = "none";
+  iframe.src = "https://vnv5.github.io";
+  win.document.body.style.margin = "0";
+  win.document.body.style.height = "100vh";
+  win.document.body.appendChild(iframe);
+  win.document.title = "Google Docs";
+}
+
+// Auto cloak: if enabled, cloak the moment the page loads
+function maybeAutoCloak() {
+  if (localStorage.getItem("autoCloak") === "true") openCloak();
+}
+
+// Expose globally so settings page button can call it directly
+window.openCloak = openCloak;
+
 /* ===== PANIC BUTTON LOADER ===== */
 function loadPanicButton() {
   const enabled = localStorage.getItem("panicEnabled") === "true";
@@ -66,6 +91,7 @@ window.onload = () => {
   loadNav();
   setupTransitions();
   loadPanicButton();
+  maybeAutoCloak();
 
   const isWebApp = detectWebAppMode();
 
@@ -114,13 +140,13 @@ window.onload = () => {
   });
 
   if (autoCloakToggle) {
-    autoCloakToggle.checked = localStorage.getItem('autoCloak') === 'true';
-    autoCloakToggle.addEventListener('change', () => {
+    autoCloakToggle.checked = localStorage.getItem("autoCloak") === "true";
+    autoCloakToggle.addEventListener("change", () => {
       if (!webAppToggle?.checked) {
-        localStorage.setItem('autoCloak', autoCloakToggle.checked);
+        localStorage.setItem("autoCloak", autoCloakToggle.checked);
       } else {
         autoCloakToggle.checked = false;
-        showPopup('This Setting Cannot Be Activated Due To Web-App Mode');
+        showPopup("This Setting Cannot Be Activated Due To Web-App Mode");
       }
     });
   }
