@@ -14,7 +14,6 @@
 <link rel="manifest" href="/manifest.json">
 
 <link rel="stylesheet" href="../css/style.css" />
-<link rel="stylesheet" href="../css/panic.css">
 
 <style>
 .settings-menu {
@@ -75,7 +74,6 @@
   box-shadow: 0 0 20px #fff, 0 0 40px #e65c00;
 }
 
-/* Glow Toggle */
 .toggle-switch {
   position: relative;
   width: 70px;
@@ -141,7 +139,7 @@ input:checked + .slider:before {
 
       <div class="setting-card">
         <h3>Cloak</h3>
-        <button>Activate</button>
+        <button onclick="openCloak()">Activate</button>
       </div>
 
       <div class="setting-card">
@@ -172,46 +170,14 @@ input:checked + .slider:before {
   </section>
 </main>
 
-<!-- NAV CONTAINER -->
 <div id="nav-container"></div>
 
 <footer class="site-footer">
   <p>&copy; 2026 The Carey Network — All rights reserved.</p>
 </footer>
 
-<!-- LOAD NAVBAR -->
-<script>
-fetch('/components/nav.html')
-  .then(res => res.text())
-  .then(data => {
-    document.getElementById('nav-container').innerHTML = data;
-  });
-</script>
-
-<!-- MAIN -->
+<!-- main.js handles nav, transitions, panic injection, and toggle sync -->
 <script src="/js/main.js"></script>
-
-<!-- PANIC (defer so DOM is ready) -->
-<script src="/js/panic.js" defer></script>
-
-<!-- SETTINGS SYNC (defer keeps load order consistent with panic.js) -->
-<script defer>
-document.addEventListener("DOMContentLoaded", () => {
-  const panicToggle = document.getElementById("panicToggle");
-  if (!panicToggle) return;
-
-  // Reflect saved state on page load
-  panicToggle.checked = localStorage.getItem("panicEnabled") === "true";
-
-  panicToggle.addEventListener("change", () => {
-    localStorage.setItem("panicEnabled", panicToggle.checked);
-
-    // Tell panic.js to re-read settings immediately
-    // (panic.js exposes nothing globally, so we fire a custom event)
-    window.dispatchEvent(new Event("panicSettingsChanged"));
-  });
-});
-</script>
 
 </body>
 </html>
