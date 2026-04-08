@@ -317,7 +317,7 @@ input:checked + .slider:before {
 }
 
 .game-card::after {
-  content: "🎮";
+  content: "\1F3AE";
   font-size: 2rem;
   position: absolute;
   top: 50%;
