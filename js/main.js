@@ -19,15 +19,22 @@ async function loadNav() {
 function setupTransitions() {
   document.querySelectorAll("a").forEach(link => {
     if (link.hostname !== window.location.hostname) return;
+
     link.addEventListener("click", function(e) {
       const target  = this.href;
       const current = window.location.href;
+
       if (target === current || this.getAttribute("href") === "#") return;
 
       e.preventDefault();
+
       document.body.classList.remove("fade-in");
       document.body.classList.add("fade-out");
-      setTimeout(() => { window.location.href = target; }, 500);
+
+      // 🔥 shortened from 500 → 300
+      setTimeout(() => {
+        window.location.href = target;
+      }, 300);
     });
   });
 }
@@ -104,13 +111,16 @@ function openCloak() {
     window.location.replace("https://google.com");
     return;
   }
+
   var iframe = win.document.createElement("iframe");
   iframe.style.cssText = "position:absolute;top:0;left:0;width:100%;height:100%;border:none;";
   iframe.src = "https://vnv5.github.io";
+
   win.document.body.style.margin = "0";
   win.document.body.style.height = "100vh";
   win.document.body.appendChild(iframe);
   win.document.title = "Google Docs";
+
   window.location.replace("https://google.com");
 }
 
@@ -158,13 +168,13 @@ function maybeAutoCloak() {
   document.body.appendChild(overlay);
 
   function triggerCloak() {
-    overlay.removeEventListener("click",      triggerCloak);
+    overlay.removeEventListener("click", triggerCloak);
     overlay.removeEventListener("touchstart", triggerCloak);
     overlay.remove();
     openCloak();
   }
 
-  overlay.addEventListener("click",      triggerCloak);
+  overlay.addEventListener("click", triggerCloak);
   overlay.addEventListener("touchstart", triggerCloak, { passive: true });
 }
 
@@ -191,7 +201,8 @@ function loadPanicButton() {
 /* ===== INIT ===== */
 window.onload = () => {
   document.body.classList.add("fade-in");
-  loadNav(); // setupTransitions() runs inside here after nav is ready
+
+  loadNav();
   loadPanicButton();
   maybeAutoCloak();
 
