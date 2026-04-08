@@ -11,6 +11,7 @@ async function loadNav() {
     if (iconPath === currentPath) icon.classList.add("active");
   });
 
+  // Called here ONLY — after nav is injected so all links exist
   setupTransitions();
 }
 
@@ -19,7 +20,6 @@ function setupTransitions() {
   document.querySelectorAll("a").forEach(link => {
     if (link.hostname !== window.location.hostname) return;
     link.addEventListener("click", function(e) {
-      if (this.closest('.utility-bar')) return;
       const target  = this.href;
       const current = window.location.href;
       if (target === current || this.getAttribute("href") === "#") return;
@@ -64,7 +64,7 @@ function showCloakBlockedPopup() {
       font-family:'Inter',sans-serif;
       box-shadow:0 0 30px #e65c00, 0 0 60px rgba(230,92,0,0.4);
     ">
-      <div style="font-size:2.4rem;margin-bottom:14px;">🔒</div>
+      <div style="font-size:2.4rem;margin-bottom:14px;">&#x1F512;</div>
       <p style="font-size:1.15rem;font-weight:700;margin-bottom:10px;line-height:1.4;">
         Not Available in Web-App Mode
       </p>
@@ -89,7 +89,6 @@ function showCloakBlockedPopup() {
   document.body.appendChild(popup);
 
   popup.querySelector("#cloak-blocked-close").addEventListener("click", () => popup.remove());
-  // Also close on backdrop tap
   popup.addEventListener("click", (e) => { if (e.target === popup) popup.remove(); });
 }
 
@@ -117,15 +116,9 @@ function openCloak() {
 
 /* ===== AUTO CLOAK ===== */
 function maybeAutoCloak() {
-  // Never run inside an iframe — prevents infinite loop when the cloaked
-  // window loads vnv5.github.io and main.js fires again inside the iframe
   if (window !== window.top) return;
-
   if (localStorage.getItem("autoCloak") !== "true") return;
-
-  if (detectWebAppMode()) {
-    return;
-  }
+  if (detectWebAppMode()) return;
 
   const overlay = document.createElement("div");
   overlay.id = "cloak-overlay";
@@ -175,18 +168,14 @@ function maybeAutoCloak() {
   overlay.addEventListener("touchstart", triggerCloak, { passive: true });
 }
 
-// Expose globally so settings page inline onclick can call it
 window.openCloak = openCloak;
 
 /* ===== PANIC BUTTON LOADER ===== */
 function loadPanicButton() {
   const enabled = localStorage.getItem("panicEnabled") === "true";
   if (!enabled) return;
-
-  // Don't inject twice if already on page
   if (document.getElementById("panic-btn")) return;
 
-  // Inject stylesheet if not already present
   if (!document.querySelector('link[href="/css/panic.css"]')) {
     const link = document.createElement("link");
     link.rel  = "stylesheet";
@@ -194,7 +183,6 @@ function loadPanicButton() {
     document.head.appendChild(link);
   }
 
-  // Inject script
   const script = document.createElement("script");
   script.src = "/js/panic.js";
   document.body.appendChild(script);
@@ -203,14 +191,12 @@ function loadPanicButton() {
 /* ===== INIT ===== */
 window.onload = () => {
   document.body.classList.add("fade-in");
-  loadNav();
-  setupTransitions();
+  loadNav(); // setupTransitions() runs inside here after nav is ready
   loadPanicButton();
   maybeAutoCloak();
 
   const isWebApp = detectWebAppMode();
 
-  /* -- Settings page elements (null-safe, only exist on settings page) -- */
   const cloakButton      = document.querySelector('.setting-card:first-child button');
   const autoCloakToggle  = document.querySelector('.setting-card:nth-child(2) input[type="checkbox"]');
   const panicToggle      = document.querySelector('.setting-card:nth-child(3) input[type="checkbox"]');
@@ -228,7 +214,6 @@ window.onload = () => {
 
   if (popupClose) popupClose.addEventListener('click', () => popup.classList.remove('show'));
 
-  /* -- Web App Mode toggle -- */
   if (isWebApp) {
     if (webAppToggle) {
       webAppToggle.checked  = true;
@@ -242,7 +227,6 @@ window.onload = () => {
     webAppToggle.disabled = true;
   }
 
-  /* -- Cloak / Auto Cloak blocked in Web App Mode -- */
   [cloakButton, autoCloakToggle].forEach(el => {
     if (!el) return;
     el.addEventListener('click', e => {
@@ -266,24 +250,16 @@ window.onload = () => {
     });
   }
 
-  /* -- Panic Button toggle -- */
   if (panicToggle) {
-    // Sync checkbox to saved state (key: panicEnabled — matches panic.js)
     panicToggle.checked = localStorage.getItem("panicEnabled") === "true";
-
     panicToggle.addEventListener('change', () => {
       localStorage.setItem("panicEnabled", panicToggle.checked);
-
       if (panicToggle.checked) {
-        // Load panic button immediately without requiring page reload
         loadPanicButton();
       } else {
-        // Hide it immediately; full removal happens on next page load
         const panicBtn = document.getElementById("panic-btn");
         if (panicBtn) panicBtn.style.display = "none";
       }
-
-      // Tell panic.js to re-read settings if it's already loaded
       window.dispatchEvent(new Event("panicSettingsChanged"));
     });
   }
