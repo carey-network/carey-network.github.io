@@ -273,10 +273,24 @@ input:checked + .slider:before {
   align-items: flex-start;
 }
 
+/* Games grid fades in with main since it lives inside <main> */
 .games-overlay {
   width: 100%;
   max-width: 1800px;
   margin: 0 auto;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.4s ease-out 0.2s, transform 0.4s ease-out 0.2s;
+}
+
+body.fade-in .games-overlay {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+body.fade-out .games-overlay {
+  opacity: 0;
+  transform: translateY(-12px);
 }
 
 .games-grid {
@@ -367,6 +381,7 @@ input:checked + .slider:before {
   opacity: 0.8;
 }
 
+/* ---- Responsive ---- */
 @media (max-width: 1400px) {
   .games-grid { grid-template-columns: repeat(6, 1fr); }
 }
