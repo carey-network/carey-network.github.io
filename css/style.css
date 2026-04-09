@@ -398,3 +398,78 @@ body.fade-out .games-overlay {
 @media (max-width: 400px) {
   .games-grid { grid-template-columns: repeat(2, 1fr); }
 }
+/* ---- Game Player ---- */
+.game-player {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.game-frame {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border: 3px solid #e65c00;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 0 25px rgba(230,92,0,0.5);
+}
+
+.game-frame iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.game-controls {
+  margin-top: 12px;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.game-controls button {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  border: none;
+  background: #111;
+  cursor: pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 0 10px rgba(230,92,0,0.4);
+  transition:0.25s ease;
+}
+
+.game-controls button:hover {
+  transform: scale(1.1);
+  box-shadow:0 0 20px #e65c00;
+}
+
+.game-controls img {
+  width: 24px;
+  height: 24px;
+}
+
+/* ---- Web App Fullscreen Mode ---- */
+.embed-fullscreen .game-frame {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: unset;
+  z-index: 99998;
+  border-radius: 0;
+}
+
+/* Exit Button */
+.embed-fullscreen::before {
+  content: "✕";
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 99999;
+  font-size: 2rem;
+  color: #fff;
+  cursor: pointer;
+}
