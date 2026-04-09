@@ -24,8 +24,8 @@
 
     <div class="game-player">
 
-      <div class="game-frame" id="gameFrameWrap">
-        <iframe id="gameFrame" src="https://geodash.org/game/geometry-dash-breeze-embed/"></iframe>
+      <div class="game-frame">
+        <iframe id="gameFrame" src="https://example.com"></iframe>
       </div>
 
       <div class="game-controls">
@@ -49,7 +49,7 @@
   <p>&copy; 2026 The Carey Network</p>
 </footer>
 
-<!-- FULLSCREEN EXIT BUTTON -->
+<!-- EXIT BUTTON -->
 <button id="exitFullscreenBtn" onclick="exitFullscreenMode()">✕</button>
 
 <script src="/js/main.js"></script>
@@ -66,13 +66,13 @@ function isWebApp() {
 }
 
 function toggleFullscreen() {
-  const wrap = document.getElementById("gameFrameWrap");
+  const frame = document.getElementById("gameFrame");
 
   if (isWebApp()) {
     document.body.classList.add("embed-fullscreen");
   } else {
     if (!document.fullscreenElement) {
-      wrap.requestFullscreen();
+      frame.requestFullscreen();
     } else {
       document.exitFullscreen();
     }
