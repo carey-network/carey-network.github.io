@@ -452,18 +452,25 @@ body.fade-out .games-overlay {
   height: 24px;
 }
 
-/* ===== REAL FULLSCREEN MODE ===== */
+/* ===== REAL FULLSCREEN MODE (FIXED FOR iOS + UTILITY BAR) ===== */
+
 .embed-fullscreen {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100dvh; /* iOS FIX */
   overflow: hidden;
+  z-index: 99997;
+  background: #000;
 }
 
-/* iframe takes full screen */
+/* iframe takes FULL screen */
 .embed-fullscreen #gameFrame {
   position: fixed !important;
   top: 0;
   left: 0;
   width: 100vw !important;
-  height: 100vh !important;
+  height: 100dvh !important; /* iOS FIX */
   z-index: 99998;
   background: #000;
 }
@@ -475,23 +482,25 @@ body.fade-out .games-overlay {
   background: transparent !important;
 }
 
-/* hide everything except iframe */
+/* HIDE EVERYTHING ELSE */
 .embed-fullscreen header,
 .embed-fullscreen footer,
 .embed-fullscreen .game-controls,
 .embed-fullscreen .games-overlay,
-.embed-fullscreen .hero > *:not(.game-player) {
+.embed-fullscreen .hero > *:not(.game-player),
+.embed-fullscreen .utility-bar,
+.embed-fullscreen #nav-container {
   display: none !important;
 }
 
 /* EXIT BUTTON */
 #exitFullscreenBtn {
   position: fixed;
-  top: 16px;
+  top: env(safe-area-inset-top, 16px);
   left: 16px;
-  width: 50px;
-  height: 50px;
-  border-radius: 12px;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
   border: none;
   background: rgba(0,0,0,0.7);
   color: #fff;
@@ -499,7 +508,7 @@ body.fade-out .games-overlay {
   cursor: pointer;
   z-index: 99999;
   display: none;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
 }
 
 .embed-fullscreen #exitFullscreenBtn {
