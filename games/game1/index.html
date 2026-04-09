@@ -1,1 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Game - The Carey Network</title>
 
+<link rel="stylesheet" href="/css/style.css" />
+
+<link rel="apple-touch-icon" href="/images/icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="icon" href="/images/icon.png">
+</head>
+
+<body class="games-page">
+
+<header class="site-header">
+  <img src="/images/logo.png" class="logo" />
+</header>
+
+<main>
+  <section class="hero orange-bg">
+
+    <div class="game-player">
+
+      <div class="game-frame">
+        <iframe id="gameFrame" src="https://frogiesarcade.win"></iframe>
+      </div>
+
+      <div class="game-controls">
+        <button onclick="refreshGame()">
+          <img src="/images/refresh.png">
+        </button>
+
+        <button onclick="toggleFullscreen()">
+          <img src="/images/fullscreen.png">
+        </button>
+      </div>
+
+    </div>
+
+  </section>
+</main>
+
+<div id="nav-container"></div>
+
+<footer class="site-footer">
+  <p>&copy; 2026 The Carey Network</p>
+</footer>
+
+<script src="/js/main.js"></script>
+
+<script>
+function refreshGame() {
+  const frame = document.getElementById("gameFrame");
+  frame.src = frame.src;
+}
+
+function toggleFullscreen() {
+  const frameWrap = document.querySelector(".game-frame");
+
+  const isWebApp =
+    window.matchMedia('(display-mode: standalone)').matches ||
+    window.navigator.standalone === true;
+
+  if (isWebApp) {
+    document.body.classList.toggle("embed-fullscreen");
+  } else {
+    if (!document.fullscreenElement) {
+      frameWrap.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  }
+}
+</script>
+
+</body>
+</html>
