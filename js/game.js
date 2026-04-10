@@ -5,13 +5,26 @@ function refreshGame() {
   frame.src = frame.src;
 }
 
+function isWebApp() {
+  return window.matchMedia("(display-mode: standalone)").matches
+      || window.navigator.standalone === true;
+}
+
 function isFullscreen() {
   return document.body.classList.contains("embed-fullscreen");
 }
 
 function toggleFullscreen() {
-  document.body.classList.toggle("embed-fullscreen");
-  exitBtn.style.display = isFullscreen() ? "block" : "none";
+  if (isWebApp()) {
+    document.body.classList.toggle("embed-fullscreen");
+    exitBtn.style.display = isFullscreen() ? "block" : "none";
+  } else {
+    if (!document.fullscreenElement) {
+      document.querySelector(".game-player").requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  }
   document.activeElement.blur();
 }
 
