@@ -452,48 +452,91 @@ body.fade-out .games-overlay {
   height: 24px;
 }
 
-/* ===== REAL FULLSCREEN MODE (FIXED FOR iOS + UTILITY BAR) ===== */
-
+/* ===== WEBAPP FULLSCREEN (iOS home screen only) ===== */
 .embed-fullscreen {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100dvh; /* iOS FIX */
   overflow: hidden;
-  z-index: 99997;
-  background: #000;
 }
 
-/* iframe takes FULL screen */
 .embed-fullscreen #gameFrame {
   position: fixed !important;
-  top: 0;
-  left: 0;
+  inset: 0 !important;
   width: 100vw !important;
-  height: 100dvh !important; /* iOS FIX */
+  height: 100dvh !important;
   z-index: 99998;
-  background: #000;
-}
-
-/* remove frame styling */
-.embed-fullscreen .game-frame {
   border: none !important;
-  box-shadow: none !important;
-  background: transparent !important;
+  border-radius: 0 !important;
 }
 
-/* HIDE EVERYTHING ELSE */
+.embed-fullscreen .game-frame {
+  display: none !important;
+}
+
 .embed-fullscreen header,
 .embed-fullscreen footer,
 .embed-fullscreen .game-controls,
-.embed-fullscreen .games-overlay,
-.embed-fullscreen .hero > *:not(.game-player),
 .embed-fullscreen .utility-bar,
 .embed-fullscreen #nav-container {
   display: none !important;
 }
 
-/* EXIT BUTTON */
+.embed-fullscreen #exitFullscreenBtn {
+  display: block;
+}
+
+/* ===== BASE PLAYER LAYOUT ===== */
+.game-player {
+  width: 100%;
+  height: 100%;
+}
+
+.game-frame {
+  width: 100%;
+  height: 100%;
+}
+
+.game-player iframe {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border: none;
+}
+
+/* ===== BROWSER FULLSCREEN ===== */
+.game-player:fullscreen,
+.game-player:-webkit-full-screen {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  display: block;
+  max-width: unset;
+  padding: 0;
+}
+
+.game-player:fullscreen .game-frame,
+.game-player:-webkit-full-screen .game-frame {
+  width: 100%;
+  height: 100%;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  aspect-ratio: unset !important;
+}
+
+.game-player:fullscreen iframe,
+.game-player:-webkit-full-screen iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.game-player:fullscreen .game-controls,
+.game-player:-webkit-full-screen .game-controls {
+  display: none;
+}
+
+/* ===== EXIT BUTTON ===== */
 #exitFullscreenBtn {
   position: fixed;
   top: env(safe-area-inset-top, 16px);
@@ -511,38 +554,6 @@ body.fade-out .games-overlay {
   backdrop-filter: blur(10px);
 }
 
-.embed-fullscreen #exitFullscreenBtn {
-  display: block;
-}
-
 #exitFullscreenBtn:hover {
   background: rgba(230,92,0,0.9);
-}
-
-.player-fullscreen {
-  position: fixed !important;
-  inset: 0 !important;
-  width: 100vw !important;
-  height: 100dvh !important;
-  max-width: unset !important;
-  background: #000 !important;
-  z-index: 99998;
-  display: flex !important;
-}
-
-.player-fullscreen .game-frame {
-  position: absolute !important;
-  inset: 0 !important;
-  width: 100vw !important;
-  height: 100dvh !important;
-  border: none !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  aspect-ratio: unset !important;
-}
-
-.player-fullscreen iframe {
-  width: 100% !important;
-  height: 100% !important;
-  border: none !important;
 }
