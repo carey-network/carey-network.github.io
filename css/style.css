@@ -519,31 +519,30 @@ body.fade-out .games-overlay {
   background: rgba(230,92,0,0.9);
 }
 
-.game-player:fullscreen,
-.game-player:-webkit-full-screen {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100dvh;
-  background: #000;
-  display: flex;
+.player-fullscreen {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100dvh !important;
+  max-width: unset !important;
+  background: #000 !important;
+  z-index: 99998;
+  display: flex !important;
 }
 
-.game-player:fullscreen .game-frame,
-.game-player:-webkit-full-screen .game-frame {
-  position: absolute;
-  inset: 0;
-  width: 100vw;
-  height: 100dvh;
+.player-fullscreen .game-frame {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100dvh !important;
   border: none !important;
   border-radius: 0 !important;
   box-shadow: none !important;
-  overflow: hidden;
+  aspect-ratio: unset !important;
 }
 
-.game-player:fullscreen iframe,
-.game-player:-webkit-full-screen iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
+.player-fullscreen iframe {
+  width: 100% !important;
+  height: 100% !important;
+  border: none !important;
 }
