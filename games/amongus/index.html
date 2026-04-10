@@ -1,1 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Games - The Carey Network</title>
 
+<link rel="stylesheet" href="/css/style.css" />
+
+<link rel="apple-touch-icon" href="/images/icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="icon" href="/images/icon.png">
+</head>
+
+<body class="games-page">
+
+<header class="site-header">
+  <img src="/images/logo.png" class="logo" />
+</header>
+
+<main>
+  <section class="hero orange-bg">
+
+    <div class="game-player">
+
+      <div class="game-frame">
+        <iframe id="gameFrame" src="/assets/amongus.html"></iframe>
+      </div>
+
+      <div class="game-controls">
+
+        <!-- REFRESH -->
+        <button onclick="refreshGame()">
+          <img src="/images/refresh.png">
+        </button>
+
+        <!-- FULLSCREEN -->
+        <button onclick="toggleFullscreen()">
+          <img src="/images/fullscreen.png">
+        </button>
+
+        <!-- DELETE SAVE -->
+        <button onclick="openDeletePopup()">
+          <img src="/images/delete.png">
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+</main>
+
+<div id="nav-container"></div>
+
+<footer class="site-footer">
+  <p>&copy; 2026 The Carey Network</p>
+</footer>
+
+<button id="exitFullscreenBtn" onclick="exitFullscreenMode()">✕</button>
+
+<!-- =========================
+     POPUP (uses your CSS system)
+========================= -->
+<div id="deletePopup" class="popup-overlay">
+  <div class="popup-content">
+    <p>Are you sure you want to delete your saved game data?</p>
+
+    <button onclick="confirmDelete()">Delete Save</button>
+    <button onclick="closeDeletePopup()" style="margin-top:10px; background:#333;">
+      Cancel
+    </button>
+  </div>
+</div>
+
+<script src="/js/main.js"></script>
+
+<script>
+const frame = document.getElementById("gameFrame");
+
+/* =========================
+   BASIC CONTROLS
+========================= */
+
+function refreshGame() {
+  frame.src = frame.src;
+}
+
+/* =========================
+   FULLSCREEN
+========================= */
+
+function isWebApp() {
+  return window.matchMedia('(display-mode: standalone)').matches
+      || window.navigator.standalone === true;
+}
+
+function toggleFullscreen() {
+  if (isWebApp()) {
+    document.body.classList.toggle("embed-fullscreen");
+  } else {
+    if (!document.fullscreenElement) {
+      frame.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  }
+}
+
+function exitFullscreenMode() {
+  document.body.classList.remove("embed-fullscreen");
+}
+
+/* =========================
+   POPUP LOGIC (MATCHES YOUR CSS)
+========================= */
+
+function openDeletePopup() {
+  document.getElementById("deletePopup").classList.add("show");
+}
+
+function closeDeletePopup() {
+  document.getElementById("deletePopup").classList.remove("show");
+}
+
+/* =========================
+   DELETE SAVE
+========================= */
+
+function confirmDelete() {
+  closeDeletePopup();
+
+  // wipe all browser storage (works for most HTML games)
+  try {
+    localStorage.clear();
+    sessionStorage.clear();
+  } catch (e) {}
+
+  // reload game
+  frame.src = frame.src;
+}
+</script>
+
+</body>
+</html>
