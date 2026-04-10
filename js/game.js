@@ -11,17 +11,20 @@ function isWebApp() {
 }
 
 function toggleFullscreen() {
-  const el = document.documentElement;
+  const isNative = document.fullscreenElement;
 
-  if (!document.fullscreenElement) {
-    el.requestFullscreen?.();
-    document.body.classList.add("embed-fullscreen");
-    exitBtn.style.display = "block";
-  } else {
+  // If browser fullscreen is active, exit it first
+  if (isNative) {
     document.exitFullscreen?.();
-    document.body.classList.remove("embed-fullscreen");
-    exitBtn.style.display = "none";
   }
+
+  // toggle custom fullscreen ONLY
+  document.body.classList.toggle("embed-fullscreen");
+
+  exitBtn.style.display =
+    document.body.classList.contains("embed-fullscreen") ? "block" : "none";
+
+  document.activeElement.blur();
 }
 
 function exitFullscreenMode() {
