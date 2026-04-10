@@ -15,6 +15,12 @@ function isFullscreen() {
 }
 
 function toggleFullscreen() {
+  alert(
+    "isWebApp: " + isWebApp() +
+    "\nstandalone: " + window.navigator.standalone +
+    "\nmatchMedia: " + window.matchMedia("(display-mode: standalone)").matches
+  );
+
   if (isWebApp()) {
     document.body.classList.toggle("embed-fullscreen");
     exitBtn.style.display = isFullscreen() ? "block" : "none";
@@ -25,6 +31,7 @@ function toggleFullscreen() {
       document.exitFullscreen();
     }
   }
+
   document.activeElement.blur();
 }
 
