@@ -20,7 +20,7 @@
   <section class="hero orange-bg">
     <div class="game-player">
       <div class="game-frame">
-        <iframe id="gameFrame" src="/assets/blockblast.html" data-src="/assets/blockblast.html"></iframe>
+        <iframe id="gameFrame" src="/assets/amongus.html" data-src="/assets/amongus.html"></iframe>
       </div>
       <div class="game-controls">
         <button onclick="refreshGame()">
@@ -40,7 +40,7 @@
 <div id="nav-container"></div>
 
 <footer class="site-footer">
-  <p>&copy; 2026 The Carey Network — All rights reserved.</p>
+  <p>&copy; 2026 The Carey Network</p>
 </footer>
 
 <button id="exitFullscreenBtn" onclick="exitFullscreenMode()">✕</button>
@@ -54,54 +54,7 @@
 </div>
 
 <script src="/js/main.js"></script>
-<script>
-  const frame = document.getElementById("gameFrame");
-  const exitBtn = document.getElementById("exitFullscreenBtn");
-
-  function refreshGame() {
-    frame.src = frame.src;
-  }
-
-  function isFullscreen() {
-    return document.body.classList.contains("embed-fullscreen");
-  }
-
-  function toggleFullscreen() {
-    document.body.classList.toggle("embed-fullscreen");
-    exitBtn.style.display = isFullscreen() ? "block" : "none";
-    document.activeElement.blur();
-  }
-
-  function exitFullscreenMode() {
-    document.body.classList.remove("embed-fullscreen");
-    exitBtn.style.display = "none";
-  }
-
-  function openDeletePopup() {
-    document.getElementById("deletePopup").classList.add("show");
-  }
-
-  function closeDeletePopup() {
-    document.getElementById("deletePopup").classList.remove("show");
-  }
-
-  function confirmDelete() {
-    closeDeletePopup();
-    try {
-      const win = frame.contentWindow;
-      win.localStorage.clear();
-      win.sessionStorage.clear();
-      const idb = win.indexedDB;
-      idb.databases().then(dbs => {
-        dbs.forEach(db => idb.deleteDatabase(db.name));
-      });
-    } catch(e) {}
-    frame.src = "about:blank";
-    setTimeout(() => {
-      frame.src = frame.getAttribute("data-src");
-    }, 300);
-  }
-</script>
+<script src="/js/game.js"></script>
 
 </body>
 </html>
