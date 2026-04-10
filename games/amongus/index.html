@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Games - The Carey Network</title>
+<title>Game Name - The Carey Network</title>
 <link rel="stylesheet" href="/css/style.css" />
 <link rel="apple-touch-icon" href="/images/icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -20,7 +20,7 @@
   <section class="hero orange-bg">
     <div class="game-player">
       <div class="game-frame">
-        <iframe id="gameFrame" src="/assets/amongus.html" data-src="/assets/amongus.html"></iframe>
+        <iframe id="gameFrame" src="/assets/2048.html" data-src="/assets/2048.html"></iframe>
       </div>
       <div class="game-controls">
         <button onclick="refreshGame()">
@@ -56,54 +56,27 @@
 <script src="/js/main.js"></script>
 <script>
   const frame = document.getElementById("gameFrame");
-  const player = document.querySelector(".game-player");
   const exitBtn = document.getElementById("exitFullscreenBtn");
 
   function refreshGame() {
     frame.src = frame.src;
   }
 
-  function isWebApp() {
-    return window.matchMedia("(display-mode: standalone)").matches
-        || window.navigator.standalone === true;
+  function isFullscreen() {
+    return document.body.classList.contains("embed-fullscreen");
   }
 
-  // ---- FULLSCREEN ----
   function toggleFullscreen() {
-    if (isWebApp()) {
-      document.body.classList.toggle("embed-fullscreen");
-      exitBtn.style.display = document.body.classList.contains("embed-fullscreen") ? "block" : "none";
-    } else {
-      if (!document.fullscreenElement) {
-        player.requestFullscreen();
-      } else {
-        document.exitFullscreen();
-      }
-    }
+    document.body.classList.toggle("embed-fullscreen");
+    exitBtn.style.display = isFullscreen() ? "block" : "none";
     document.activeElement.blur();
   }
 
   function exitFullscreenMode() {
-    if (isWebApp()) {
-      document.body.classList.remove("embed-fullscreen");
-      exitBtn.style.display = "none";
-    } else {
-      document.exitFullscreen();
-    }
+    document.body.classList.remove("embed-fullscreen");
+    exitBtn.style.display = "none";
   }
 
-  // Sync browser fullscreen state with class
-  document.addEventListener("fullscreenchange", () => {
-    if (document.fullscreenElement) {
-      player.classList.add("player-fullscreen");
-      exitBtn.style.display = "none"; // browser handles its own exit UI
-    } else {
-      player.classList.remove("player-fullscreen");
-      exitBtn.style.display = "none";
-    }
-  });
-
-  // ---- POPUP ----
   function openDeletePopup() {
     document.getElementById("deletePopup").classList.add("show");
   }
@@ -112,17 +85,21 @@
     document.getElementById("deletePopup").classList.remove("show");
   }
 
-  // ---- DELETE SAVE ----
   function confirmDelete() {
     closeDeletePopup();
+    try {
+      const win = frame.contentWindow;
+      win.localStorage.clear();
+      win.sessionStorage.clear();
+      const idb = win.indexedDB;
+      idb.databases().then(dbs => {
+        dbs.forEach(db => idb.deleteDatabase(db.name));
+      });
+    } catch(e) {}
     frame.src = "about:blank";
     setTimeout(() => {
-      try {
-        localStorage.clear();
-        sessionStorage.clear();
-      } catch(e) {}
       frame.src = frame.getAttribute("data-src");
-    }, 100);
+    }, 300);
   }
 </script>
 
