@@ -4,54 +4,36 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Games - The Carey Network</title>
-
-<link rel="stylesheet" href="../css/style.css" />
-
+<link rel="stylesheet" href="/css/style.css" />
 <link rel="apple-touch-icon" href="/images/icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Carey Network">
 <link rel="icon" href="/images/icon.png">
-<link rel="manifest" href="/manifest.json">
 </head>
-
 <body class="games-page">
 
 <header class="site-header">
-  <img src="../images/logo.png" class="logo" alt="The Carey Network Logo" />
+  <img src="/images/logo.png" class="logo" alt="The Carey Network Logo" />
 </header>
 
 <main>
   <section class="hero orange-bg">
-
-    <div class="games-overlay">
-      <p class="games-section-label">● Games Library</p>
-
-      <div class="games-grid">
-
-        <!-- ROW 1 -->
-        <a href="/games/2048" class="game-card"><img src="/images/games/2048.png" alt="2048"></a>
-        <a href="/games/amongus" class="game-card"><img src="/images/games/amongus.png" alt="Among Us"></a>
-        <a href="/games/blockblast" class="game-card"><img src="/images/games/blockblast.png" alt="Block Blast"></a>
-        <a href="/games/game4" class="game-card"><img src="/images/games/game4.png" alt="Game 4"></a>
-        <a href="/games/game5" class="game-card"><img src="/images/games/game5.png" alt="Game 5"></a>
-        <a href="/games/game6" class="game-card"><img src="/images/games/game6.png" alt="Game 6"></a>
-        <a href="/games/game7" class="game-card"><img src="/images/games/game7.png" alt="Game 7"></a>
-        <a href="/games/game8" class="game-card"><img src="/images/games/game8.png" alt="Game 8"></a>
-
-        <!-- ROW 2 -->
-        <a href="/games/game9" class="game-card"><img src="/images/games/game9.png" alt="Game 9"></a>
-        <a href="/games/game10" class="game-card"><img src="/images/games/game10.png" alt="Game 10"></a>
-        <a href="/games/game11" class="game-card"><img src="/images/games/game11.png" alt="Game 11"></a>
-        <a href="/games/game12" class="game-card"><img src="/images/games/game12.png" alt="Game 12"></a>
-        <a href="/games/game13" class="game-card"><img src="/images/games/game13.png" alt="Game 13"></a>
-        <a href="/games/game14" class="game-card"><img src="/images/games/game14.png" alt="Game 14"></a>
-        <a href="/games/game15" class="game-card"><img src="/images/games/game15.png" alt="Game 15"></a>
-        <a href="/games/game16" class="game-card"><img src="/images/games/game16.png" alt="Game 16"></a>
-
+    <div class="game-player">
+      <div class="game-frame">
+        <iframe id="gameFrame" src="/assets/amongus.html" data-src="/assets/amongus.html"></iframe>
+      </div>
+      <div class="game-controls">
+        <button onclick="refreshGame()">
+          <img src="/images/refresh.png" alt="Refresh">
+        </button>
+        <button onclick="toggleFullscreen()">
+          <img src="/images/fullscreen.png" alt="Fullscreen">
+        </button>
+        <button onclick="openDeletePopup()">
+          <img src="/images/delete.png" alt="Delete Save">
+        </button>
       </div>
     </div>
-
   </section>
 </main>
 
@@ -61,7 +43,65 @@
   <p>&copy; 2026 The Carey Network — All rights reserved.</p>
 </footer>
 
+<button id="exitFullscreenBtn" onclick="exitFullscreenMode()">✕</button>
+
+<div id="deletePopup" class="popup-overlay">
+  <div class="popup-content">
+    <p>Are you sure you want to delete your saved game data?</p>
+    <button onclick="confirmDelete()">Delete Save</button>
+    <button onclick="closeDeletePopup()" style="margin-top:10px; background:#333;">Cancel</button>
+  </div>
+</div>
+
 <script src="/js/main.js"></script>
+<script>
+  const frame = document.getElementById("gameFrame");
+  const exitBtn = document.getElementById("exitFullscreenBtn");
+
+  function refreshGame() {
+    frame.src = frame.src;
+  }
+
+  function isFullscreen() {
+    return document.body.classList.contains("embed-fullscreen");
+  }
+
+  function toggleFullscreen() {
+    document.body.classList.toggle("embed-fullscreen");
+    exitBtn.style.display = isFullscreen() ? "block" : "none";
+    document.activeElement.blur();
+  }
+
+  function exitFullscreenMode() {
+    document.body.classList.remove("embed-fullscreen");
+    exitBtn.style.display = "none";
+  }
+
+  function openDeletePopup() {
+    document.getElementById("deletePopup").classList.add("show");
+  }
+
+  function closeDeletePopup() {
+    document.getElementById("deletePopup").classList.remove("show");
+  }
+
+  function confirmDelete() {
+    closeDeletePopup();
+    try {
+      const win = frame.contentWindow;
+      win.localStorage.clear();
+      win.sessionStorage.clear();
+      const idb = win.indexedDB;
+      idb.databases().then(dbs => {
+        dbs.forEach(db => idb.deleteDatabase(db.name));
+      });
+    } catch(e) {}
+    frame.src = "about:blank";
+    setTimeout(() => {
+      frame.src = frame.getAttribute("data-src");
+    }, 300);
+  }
+</script>
 
 </body>
 </html>
