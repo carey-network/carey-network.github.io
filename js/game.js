@@ -1,50 +1,77 @@
-const frame = document.getElementById("gameFrame");
-const exitBtn = document.getElementById("exitFullscreenBtn");
-const player = document.querySelector(".game-player");
+/**
+ * game.js — The Carey Network
+ * Handles: game refresh, fullscreen (web app + browser), delete-save popup.
+ *
+ * Requires: #gameFrame (with data-src attr), .game-player, #exitFullscreenBtn,
+ *           #deletePopup (.popup-overlay / .show)
+ */
 
+const frame   = document.getElementById("gameFrame");
+const player  = document.querySelector(".game-player");
+const exitBtn = document.getElementById("exitFullscreenBtn");
+
+
+/* ============================================================
+   REFRESH
+   ============================================================ */
 function refreshGame() {
   frame.src = frame.src;
 }
 
+
+/* ============================================================
+   FULLSCREEN
+   Behavior splits on how the page is launched:
+     • Installed PWA / home-screen web app → CSS embed-fullscreen class
+     • Regular browser tab               → native Fullscreen API
+   ============================================================ */
 function isWebApp() {
-  return window.navigator.standalone === true;
+  return (
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true
+  );
 }
 
 function toggleFullscreen() {
-  const isCustom = document.body.classList.contains("embed-fullscreen");
-
-  // If already in browser fullscreen → exit it
-  if (document.fullscreenElement) {
-    document.exitFullscreen?.();
-    return;
-  }
-
-  // If NOT in browser fullscreen, enter it first
-  const el = document.documentElement;
-
-  if (el.requestFullscreen) {
-    el.requestFullscreen().catch(() => {
-      // fallback if blocked → use custom fullscreen
-      document.body.classList.toggle("embed-fullscreen");
-    });
-  } else {
-    // fallback for iOS / unsupported browsers
+  if (isWebApp()) {
+    const entering = !document.body.classList.contains("embed-fullscreen");
     document.body.classList.toggle("embed-fullscreen");
+    exitBtn.style.display = entering ? "block" : "none";
+  } else {
+    if (!document.fullscreenElement) {
+      player.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
   }
-
-  exitBtn.style.display = "block";
+  // Drop focus so keyboard shortcuts don't fire inside the iframe
   document.activeElement.blur();
 }
 
 function exitFullscreenMode() {
-  if (document.fullscreenElement) {
-    document.exitFullscreen?.();
+  if (isWebApp()) {
+    document.body.classList.remove("embed-fullscreen");
+    exitBtn.style.display = "none";
+  } else {
+    document.exitFullscreen();
   }
-
-  document.body.classList.remove("embed-fullscreen");
-  exitBtn.style.display = "none";
 }
 
+// Keep exitBtn hidden while the browser's own fullscreen UI is active
+document.addEventListener("fullscreenchange", () => {
+  if (document.fullscreenElement) {
+    player.classList.add("player-fullscreen");
+    exitBtn.style.display = "none";
+  } else {
+    player.classList.remove("player-fullscreen");
+    exitBtn.style.display = "none";
+  }
+});
+
+
+/* ============================================================
+   DELETE-SAVE POPUP
+   ============================================================ */
 function openDeletePopup() {
   document.getElementById("deletePopup").classList.add("show");
 }
@@ -55,16 +82,19 @@ function closeDeletePopup() {
 
 function confirmDelete() {
   closeDeletePopup();
-  try {
-    const win = frame.contentWindow;
-    win.localStorage.clear();
-    win.sessionStorage.clear();
-    win.indexedDB.databases().then(dbs => {
-      dbs.forEach(db => win.indexedDB.deleteDatabase(db.name));
-    });
-  } catch(e) {}
+
+  // Blank the frame first so the game stops running during the wipe
   frame.src = "about:blank";
+
   setTimeout(() => {
-    frame.src = frame.getAttribute("data-src");
-  }, 300);
+    try {
+      localStorage.clear();
+      sessionStorage.clear();
+    } catch (e) {
+      console.warn("Storage clear failed:", e);
+    }
+
+    // data-src is required on the iframe — falls back to live src if missing
+    frame.src = frame.getAttribute("data-src") || frame.src;
+  }, 100);
 }
