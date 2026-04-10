@@ -29,13 +29,22 @@
       </div>
 
       <div class="game-controls">
+
+        <!-- REFRESH -->
         <button onclick="refreshGame()">
           <img src="/images/refresh.png">
         </button>
 
+        <!-- FULLSCREEN -->
         <button onclick="toggleFullscreen()">
           <img src="/images/fullscreen.png">
         </button>
+
+        <!-- DELETE SAVE -->
+        <button onclick="openDeletePopup()">
+          <img src="/images/delete.png">
+        </button>
+
       </div>
 
     </div>
@@ -49,16 +58,35 @@
   <p>&copy; 2026 The Carey Network</p>
 </footer>
 
-<!-- EXIT BUTTON -->
 <button id="exitFullscreenBtn" onclick="exitFullscreenMode()">✕</button>
+
+<!-- CONFIRM POPUP -->
+<div id="deletePopup" class="popup hidden">
+  <div class="popup-box">
+    <p>Delete saved game data?</p>
+    <div class="popup-buttons">
+      <button onclick="confirmDelete()">Yes</button>
+      <button onclick="closeDeletePopup()">No</button>
+    </div>
+  </div>
+</div>
 
 <script src="/js/main.js"></script>
 
 <script>
+const frame = document.getElementById("gameFrame");
+
+/* =========================
+   BASIC CONTROLS
+========================= */
+
 function refreshGame() {
-  const frame = document.getElementById("gameFrame");
   frame.src = frame.src;
 }
+
+/* =========================
+   FULLSCREEN
+========================= */
 
 function isWebApp() {
   return window.matchMedia('(display-mode: standalone)').matches
@@ -66,10 +94,8 @@ function isWebApp() {
 }
 
 function toggleFullscreen() {
-  const frame = document.getElementById("gameFrame");
-
   if (isWebApp()) {
-    document.body.classList.add("embed-fullscreen");
+    document.body.classList.toggle("embed-fullscreen");
   } else {
     if (!document.fullscreenElement) {
       frame.requestFullscreen();
@@ -81,6 +107,33 @@ function toggleFullscreen() {
 
 function exitFullscreenMode() {
   document.body.classList.remove("embed-fullscreen");
+}
+
+/* =========================
+   DELETE SAVE SYSTEM
+========================= */
+
+function openDeletePopup() {
+  document.getElementById("deletePopup").classList.remove("hidden");
+}
+
+function closeDeletePopup() {
+  document.getElementById("deletePopup").classList.add("hidden");
+}
+
+function confirmDelete() {
+  closeDeletePopup();
+
+  // wipe common game storage
+  try {
+    localStorage.clear();
+    sessionStorage.clear();
+  } catch (e) {}
+
+  // reload game
+  frame.src = frame.src;
+
+  alert("Game save deleted");
 }
 </script>
 
