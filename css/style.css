@@ -519,29 +519,30 @@ body.fade-out .games-overlay {
   background: rgba(230,92,0,0.9);
 }
 
-.game-player:fullscreen {
+.game-player:fullscreen,
+.game-player:-webkit-full-screen {
   position: fixed;
   inset: 0;
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   background: #000;
   display: flex;
 }
 
-/* KEY FIX: removes layout math entirely */
-.game-player:fullscreen .game-frame {
+.game-player:fullscreen .game-frame,
+.game-player:-webkit-full-screen .game-frame {
   position: absolute;
   inset: 0;
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   border: none !important;
   border-radius: 0 !important;
   box-shadow: none !important;
   overflow: hidden;
 }
 
-/* iframe fills exact screen */
-.game-player:fullscreen iframe {
+.game-player:fullscreen iframe,
+.game-player:-webkit-full-screen iframe {
   width: 100%;
   height: 100%;
   border: none;
