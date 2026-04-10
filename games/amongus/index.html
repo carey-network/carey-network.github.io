@@ -97,11 +97,23 @@ function isWebApp() {
 }
 
 function toggleFullscreen() {
+  const container = document.querySelector(".game-player");
+
   if (isWebApp()) {
     document.body.classList.toggle("embed-fullscreen");
+    return;
+  }
+
+  if (!document.fullscreenElement) {
+    container.requestFullscreen().then(() => {
+      setTimeout(() => {
+        window.dispatchEvent(new Event("resize"));
+      }, 100);
+    });
   } else {
-    if (!document.fullscreenElement) {
-      frame.requestFullscreen();
+    document.exitFullscreen();
+  }
+}
     } else {
       document.exitFullscreen();
     }
