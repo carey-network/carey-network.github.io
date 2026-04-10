@@ -458,37 +458,30 @@ body.fade-out .games-overlay {
   height: 24px;
 }
 
-/* ===== REAL FULLSCREEN MODE (WEBAPP FIXED + iPAD SAFE) ===== */
+/* ===== WEBAPP FULLSCREEN (STABLE ORIGINAL LOGIC RESTORED) ===== */
 
 .embed-fullscreen {
   position: fixed;
   inset: 0;
   width: 100%;
-  height: 100dvh; /* 🔥 critical for iPad viewport */
+  height: 100vh; /* 🔥 IMPORTANT: stable baseline */
   overflow: hidden;
   z-index: 99997;
   background: #000;
 }
 
-/* iframe fullscreen (stable + no layout detaching issues) */
+/* iframe takes full screen */
 .embed-fullscreen #gameFrame {
   position: fixed !important;
   top: 0;
   left: 0;
   width: 100% !important;
-  height: 100dvh !important; /* 🔥 fixes bottom undercut */
+  height: 100% !important;
   z-index: 99998;
   background: #000;
 }
 
-/* remove frame styling */
-.embed-fullscreen .game-frame {
-  border: none !important;
-  box-shadow: none !important;
-  background: transparent !important;
-}
-
-/* HIDE EVERYTHING ELSE */
+/* hide UI */
 .embed-fullscreen header,
 .embed-fullscreen footer,
 .embed-fullscreen .game-controls,
@@ -499,7 +492,7 @@ body.fade-out .games-overlay {
   display: none !important;
 }
 
-/* EXIT BUTTON */
+/* exit button (ONLY ONE RULE) */
 #exitFullscreenBtn {
   position: fixed;
   top: env(safe-area-inset-top, 16px);
@@ -514,23 +507,10 @@ body.fade-out .games-overlay {
   cursor: pointer;
   z-index: 99999;
   display: none;
-  backdrop-filter: blur(10px);
 }
 
 .embed-fullscreen #exitFullscreenBtn {
   display: block;
-}
-
-#exitFullscreenBtn:hover {
-  background: rgba(230,92,0,0.9);
-}
-
-/* ===== iPAD SAFETY FALLBACK ===== */
-@supports (-webkit-touch-callout: none) {
-  .embed-fullscreen,
-  .embed-fullscreen #gameFrame {
-    height: -webkit-fill-available !important;
-  }
 }
 
 /* ===== BASE PLAYER LAYOUT ===== */
