@@ -60,14 +60,17 @@
 
 <button id="exitFullscreenBtn" onclick="exitFullscreenMode()">✕</button>
 
-<!-- CONFIRM POPUP -->
-<div id="deletePopup" class="popup hidden">
-  <div class="popup-box">
-    <p>Delete saved game data?</p>
-    <div class="popup-buttons">
-      <button onclick="confirmDelete()">Yes</button>
-      <button onclick="closeDeletePopup()">No</button>
-    </div>
+<!-- =========================
+     POPUP (uses your CSS system)
+========================= -->
+<div id="deletePopup" class="popup-overlay">
+  <div class="popup-content">
+    <p>Are you sure you want to delete your saved game data?</p>
+
+    <button onclick="confirmDelete()">Delete Save</button>
+    <button onclick="closeDeletePopup()" style="margin-top:10px; background:#333;">
+      Cancel
+    </button>
   </div>
 </div>
 
@@ -110,21 +113,25 @@ function exitFullscreenMode() {
 }
 
 /* =========================
-   DELETE SAVE SYSTEM
+   POPUP LOGIC (MATCHES YOUR CSS)
 ========================= */
 
 function openDeletePopup() {
-  document.getElementById("deletePopup").classList.remove("hidden");
+  document.getElementById("deletePopup").classList.add("show");
 }
 
 function closeDeletePopup() {
-  document.getElementById("deletePopup").classList.add("hidden");
+  document.getElementById("deletePopup").classList.remove("show");
 }
+
+/* =========================
+   DELETE SAVE
+========================= */
 
 function confirmDelete() {
   closeDeletePopup();
 
-  // wipe common game storage
+  // wipe all browser storage (works for most HTML games)
   try {
     localStorage.clear();
     sessionStorage.clear();
@@ -132,8 +139,6 @@ function confirmDelete() {
 
   // reload game
   frame.src = frame.src;
-
-  alert("Game save deleted");
 }
 </script>
 
