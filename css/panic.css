@@ -518,3 +518,26 @@ body.fade-out .games-overlay {
 #exitFullscreenBtn:hover {
   background: rgba(230,92,0,0.9);
 }
+#panic-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(0,0,0,0.4);
+  color: #fff;
+  font-size: 1.5rem; /* 1.5x bigger feel */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10001;
+  transition: 0.2s ease;
+}
+
+#panic-close:hover {
+  background: rgba(230,92,0,0.9);
+  transform: scale(1.1);
+}
