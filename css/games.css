@@ -9,41 +9,11 @@
   padding: 10px;
 }
 
-/* GRID */
-.games-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  padding: 20px;
+.logo {
+  height: 40px;
 }
 
-/* GAME CARDS (YOUR ORIGINAL SYSTEM) */
-.game-card {
-  display: block;
-  aspect-ratio: 1 / 1;
-  border-radius: 12px;
-  background: #1a1a1a;
-  transition: 0.2s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-/* hover effect */
-.game-card:hover {
-  transform: scale(1.05);
-  background: #2a2a2a;
-}
-
-/* OPTIONAL: placeholder text if empty */
-.game-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, #333, #111);
-  opacity: 0.6;
-}
-
-/* makes sure overlay doesn't mess layout */
+/* OVERLAY WRAPPER */
 .games-overlay {
   position: relative;
   z-index: 2;
@@ -55,6 +25,110 @@
   margin: 10px 20px;
   font-size: 14px;
   opacity: 0.7;
+}
+
+/* GRID */
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  padding: 20px;
+}
+
+/* GAME CARDS (BASE STYLE) */
+.game-card {
+  display: block;
+  aspect-ratio: 1 / 1;
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  background: #1a1a1a;
+  transition: 0.2s ease;
+}
+
+/* hover effect */
+.game-card:hover {
+  transform: scale(1.05);
+  background: #2a2a2a;
+}
+
+/* dark overlay so text/icons can be added later */
+.game-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0,0,0,0.2), rgba(0,0,0,0.6));
+  z-index: 1;
+}
+
+/* =========================
+   GAME IMAGES (PLACEHOLDERS)
+   ========================= */
+
+/* Row 1 */
+.game-card:nth-child(1) {
+  background: url("/images/games/game1.png") center/cover no-repeat;
+}
+
+.game-card:nth-child(2) {
+  background: url("/images/games/game2.png") center/cover no-repeat;
+}
+
+.game-card:nth-child(3) {
+  background: url("/images/games/game3.png") center/cover no-repeat;
+}
+
+.game-card:nth-child(4) {
+  background: url("/images/games/game4.png") center/cover no-repeat;
+}
+
+.game-card:nth-child(5) {
+  background: url("/images/games/game5.png") center/cover no-repeat;
+}
+
+.game-card:nth-child(6) {
+  background: url("/images/games/game6.png") center/cover no-repeat;
+}
+
+.game-card:nth-child(7) {
+  background: url("/images/games/game7.png") center/cover no-repeat;
+}
+
+.game-card:nth-child(8) {
+  background: url("/images/games/game8.png") center/cover no-repeat;
+}
+
+/* Row 2 */
+.game-card:nth-child(9) {
+  background: url("/images/games/game9.png") center/cover no-repeat;
+}
+
+.game-card:nth-child(10) {
+  background: url("/images/games/game10.png") center/cover no-repeat;
+}
+
+.game-card:nth-child(11) {
+  background: url("/images/games/game11.png") center/cover no-repeat;
+}
+
+.game-card:nth-child(12) {
+  background: url("/images/games/game12.png") center/cover no-repeat;
+}
+
+.game-card:nth-child(13) {
+  background: url("/images/games/game13.png") center/cover no-repeat;
+}
+
+.game-card:nth-child(14) {
+  background: url("/images/games/game14.png") center/cover no-repeat;
+}
+
+.game-card:nth-child(15) {
+  background: url("/images/games/game15.png") center/cover no-repeat;
+}
+
+.game-card:nth-child(16) {
+  background: url("/images/games/game16.png") center/cover no-repeat;
 }
 
 /* MOBILE */
