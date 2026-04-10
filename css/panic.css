@@ -52,6 +52,19 @@
   animation: panicPop 0.2s ease;
 }
 
+#panic-menu [data-size],
+#panic-menu [data-action] {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
 /* minegyat */
 #panic-close-btn {
   position: absolute;
