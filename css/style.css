@@ -458,10 +458,11 @@ body.fade-out .games-overlay {
   position: fixed;
   inset: 0;
   width: 100vw;
-  height: 100dvh; /* iOS FIX */
+  height: 100dvh;
   overflow: hidden;
   z-index: 99997;
   background: #000;
+  padding-bottom: 0 !important; /* ← add this */
 }
 
 /* iframe takes FULL screen */
