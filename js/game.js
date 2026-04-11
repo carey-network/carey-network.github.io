@@ -93,14 +93,30 @@ function confirmDelete() {
   closeDeletePopup();
 
   try {
-    const win = frame.contentWindow;
+    const win = document.getElementById("gameFrame").contentWindow;
+
+    // Clear EVERYTHING accessible
     win.localStorage.clear();
     win.sessionStorage.clear();
-  } catch(e) {}
 
+    // Attempt IndexedDB wipe (works in most cases)
+    if (win.indexedDB && win.indexedDB.databases) {
+      win.indexedDB.databases().then(dbs => {
+        dbs.forEach(db => {
+          win.indexedDB.deleteDatabase(db.name);
+        });
+      });
+    }
+
+  } catch (e) {
+    console.log("Storage clear blocked (cross-origin most likely)");
+  }
+
+  // Hard reload the game
+  const frame = document.getElementById("gameFrame");
   frame.src = "about:blank";
 
   setTimeout(() => {
-    frame.src = frame.getAttribute("data-src");
+    frame.src = frame.getAttribute("src");
   }, 200);
 }
