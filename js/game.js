@@ -92,17 +92,15 @@ function closeDeletePopup() {
 function confirmDelete() {
   closeDeletePopup();
 
-  // Blank the frame first so the game stops running during the wipe
+  try {
+    const win = frame.contentWindow;
+    win.localStorage.clear();
+    win.sessionStorage.clear();
+  } catch(e) {}
+
   frame.src = "about:blank";
 
   setTimeout(() => {
-    try {
-      localStorage.clear();
-      sessionStorage.clear();
-    } catch (e) {
-      console.warn("Storage clear failed:", e);
-    }
-
-    frame.src = frame.getAttribute("data-src") || frame.src;
+    frame.src = frame.getAttribute("data-src");
   }, 200);
 }
