@@ -260,7 +260,10 @@ input:checked + .slider:before {
   cursor:pointer; transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
 }
 
-.popup-content button:hover { transform:scale(1.05); box-shadow:0 0 25px #fff,0 0 50px rgba(230,92,0,0.7); }
+.popup-content button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 35px #ffae42, 0 0 90px rgba(255,140,0,0.9);
+}
 
 /* ---- Games Section ---- */
 .games-page .hero-container {
