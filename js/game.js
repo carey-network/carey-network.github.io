@@ -92,15 +92,17 @@ function closeDeletePopup() {
 function confirmDelete() {
   closeDeletePopup();
 
-  try {
-    const win = document.getElementById("gameFrame").contentWindow;
+  const frame = document.getElementById("gameFrame");
 
-    // Clear EVERYTHING accessible
+  try {
+    const win = frame.contentWindow;
+
+    // clear storage
     win.localStorage.clear();
     win.sessionStorage.clear();
 
-    // Attempt IndexedDB wipe (works in most cases)
-    if (win.indexedDB && win.indexedDB.databases) {
+    // FORCE wipe IndexedDB properly
+    if (win.indexedDB) {
       win.indexedDB.databases().then(dbs => {
         dbs.forEach(db => {
           win.indexedDB.deleteDatabase(db.name);
@@ -109,14 +111,15 @@ function confirmDelete() {
     }
 
   } catch (e) {
-    console.log("Storage clear blocked (cross-origin most likely)");
+    console.log("Storage blocked:", e);
   }
 
-  // Hard reload the game
-  const frame = document.getElementById("gameFrame");
+  // 🔥 IMPORTANT: kill + reload fresh
+  const originalSrc = frame.src;
+
   frame.src = "about:blank";
 
   setTimeout(() => {
-    frame.src = frame.getAttribute("src");
-  }, 200);
+    frame.src = originalSrc;
+  }, 500); // longer delay = more reliable
 }
