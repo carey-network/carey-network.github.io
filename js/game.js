@@ -97,8 +97,9 @@ function confirmDelete() {
 
   setTimeout(() => {
     try {
-      localStorage.clear();
-      sessionStorage.clear();
+      // Target only the iframe's own storage, not the parent site's
+      frame.contentWindow.localStorage.clear();
+      frame.contentWindow.sessionStorage.clear();
     } catch (e) {
       console.warn("Storage clear failed:", e);
     }
