@@ -10,10 +10,6 @@ const frame   = document.getElementById("gameFrame");
 const player  = document.querySelector(".game-player");
 const exitBtn = document.getElementById("exitFullscreenBtn");
 
-// Snapshot keys that exist before the game loads.
-// confirmDelete() removes only keys added after this point.
-const preGameKeys = new Set(Object.keys(localStorage));
-
 
 /* ============================================================
    REFRESH
@@ -101,17 +97,12 @@ function confirmDelete() {
 
   setTimeout(() => {
     try {
-      // Only remove keys the game added — anything in preGameKeys belongs to the site
-      Object.keys(localStorage).forEach(key => {
-        if (!preGameKeys.has(key)) localStorage.removeItem(key);
-      });
-      Object.keys(sessionStorage).forEach(key => {
-        if (!preGameKeys.has(key)) sessionStorage.removeItem(key);
-      });
+      localStorage.clear();
+      sessionStorage.clear();
     } catch (e) {
       console.warn("Storage clear failed:", e);
     }
 
     frame.src = frame.getAttribute("data-src") || frame.src;
-  }, 100);
+  }, 200);
 }
