@@ -262,7 +262,7 @@ input:checked + .slider:before {
 
 .popup-content button:hover {
   transform: scale(1.05);
-  box-shadow: 0 0 35px #ffae42, 0 0 90px rgba(255,140,0,0.9);
+  box-shadow: 0 0 15px #e65c00, 0 0 45px rgba(255,140,0,0.9);
 }
 
 /* ---- Games Section ---- */
