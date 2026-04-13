@@ -3774,7 +3774,7 @@
                                 return e.match(/(http|https|ftp|file):\/\//) ? e : t.substring(0, t.lastIndexOf("/") + 1) + e;
                             },
                             streamingAssetsUrl: function() {
-                                return o(this.resolveBuildUrl("/assets/gd-breeze/StreamingAssets/audios/"));
+                                return o(this.resolveBuildUrl("assets/gd-breeze/StreamingAssets/audios"));
                             },
                             locateFile: function(e) {
                                 return "Build/".concat("build.wasm" == e ? this.wasmCodeUrl : e);
