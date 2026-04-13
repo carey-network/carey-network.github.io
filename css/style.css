@@ -554,17 +554,3 @@ body.fade-out .games-overlay {
   border: none;
   aspect-ratio: unset; /* ← belt-and-suspenders on the iframe itself */
 }
-
-.hero {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 300px; /* adjust if needed */
-}
-
-.hero-text {
-  color: white;
-  font-size: 3rem;
-  font-weight: 700;
-  text-align: center;
-}
