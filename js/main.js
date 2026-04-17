@@ -119,7 +119,7 @@ function openCloak() {
   win.document.body.style.margin = "0";
   win.document.body.style.height = "100vh";
   win.document.body.appendChild(iframe);
-  win.document.title = "Google Docs";
+  win.document.title = "Carey Network";
 
   window.location.replace("https://google.com");
 }
