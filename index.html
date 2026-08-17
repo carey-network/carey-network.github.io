@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Home - The Carey Network</title>
+
+<!-- Web-App / PWA Meta Tags -->
+<link rel="apple-touch-icon" href="/images/icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Carey Network">
+
+<link rel="icon" href="/images/icon.png">
+<link rel="manifest" href="/manifest.json">
+
+<link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <img src="../images/logo.png" class="logo" alt="The Carey Network Logo" />
+</header>
+
+<main>
+  <section class="hero orange-bg">
+    <h1>Welcome to The Carey Network</h1>
+    <p>Your hub for all games and stuff</p>
+    <a href="/games/" class="btn-primary">Explore</a>
+  </section>
+</main>
+
+<!-- Utility Bar -->
+<div id="nav-container"></div>
+
+<footer class="site-footer">
+  <p>&copy; 2026 The Carey Network</p>
+</footer>
+
+<!-- Welcome Popup -->
+<div id="welcomePopup" class="popup-overlay">
+  <div class="popup-content">
+    <p>
+       Welcome to The Carey Network!<br><br>
+       some games may not work rn but im planning a big update fixing that<br>
+       update: 2nd ban (please at it to homescreen 🥺)
+    </p>
+    <button onclick="closeWelcomePopup()">ok</button>
+  </div>
+</div>
+
+<script>
+  function closeWelcomePopup() {
+    const popup = document.getElementById("welcomePopup");
+    popup.classList.remove("show");
+    localStorage.setItem("visitedCareyNetwork", "true");
+  }
+
+  window.addEventListener("load", () => {
+    const hasVisited = localStorage.getItem("visitedCareyNetwork");
+    if (!hasVisited) {
+      document.getElementById("welcomePopup").classList.add("show");
+    }
+  });
+</script>
+
+<script src="/js/main.js"></script>
+</body>
+</html>
