@@ -1,0 +1,98 @@
+<base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/cookieclicker/">
+<html>
+<head>
+
+<script>
+	var VERSION=2.058;
+	var BETA=0;
+	var SAVESUFFIX='';
+	var App=typeof App==='undefined'?0:App;
+	var PRESETMODS=[];
+	var LOCAL=true; // ads suck
+</script>
+
+<title>Cookie Clicker</title>
+
+<meta name="viewport" content="width=900, initial-scale=1">
+<link rel="shortcut icon" href="img/favicon.ico" />
+<script src="base64.js"></script>
+
+<link href="style.css?v=10c" rel="stylesheet" type="text/css">
+<script src="main2.js?v=13g"></script>
+
+<style>
+/* stupid mf ugs tryna flood my shi with ads */
+#ifNoAds, #smallSupport, #support, #detectAds {
+	display:none !important;
+}
+</style>
+
+</head>
+<body>
+
+<div id="wrapper">
+
+	<div id="topBar">
+		<div style="padding:0px;height:100%;">
+			<a style="background:linear-gradient(0deg,rgba(95,22,255,0.5),rgba(182,22,255,0.25));height:24px;display:inline-block;padding:8px;padding-bottom:0px;font-variant:small-caps;color:#b76fff;text-shadow:0px 1px 2px #1b0031;" href="//dashnet.org" target="_blank">DashNet</a>
+		</div>
+		<div>Cookie Clicker &copy; 2026</div>
+	</div>
+
+	<div id="game">
+		<div id="versionNumber" class="title"></div>
+		<script>document.getElementById('versionNumber').innerHTML='v. '+VERSION;</script>
+
+		<div id="offGameMessageWrap">
+			<div id="offGameMessage">
+				<div id="loader">
+					<div class="spinnyBig"></div>
+					<div class="spinnySmall"></div>
+					<div id="loading" class="title">Loading...</div>
+				</div>
+			</div>
+		</div>
+
+		<canvas id="backgroundCanvas"></canvas>
+
+		<div id="goldenCookie" class="goldenCookie"></div>
+		<div id="shimmers"></div>
+		<div id="particles"></div>
+		<div id="sparkles" class="sparkles"></div>
+
+		<div id="sectionLeft" class="inset">
+			<div id="cookies" class="title"></div>
+			<div id="cookieAnchor">
+				<button id="bigCookie"></button>
+				<div id="cookieNumbers"></div>
+			</div>
+		</div>
+
+		<div id="sectionMiddle" class="inset">
+			<div id="comments" class="inset title">
+				<div id="prefsButton" class="panelButton"><div class="subButton">Options</div></div>
+				<div id="statsButton" class="panelButton"><div>Stats</div></div>
+			</div>
+
+			<div id="centerArea">
+				<div id="buildingsTitle" class="inset title zoneTitle">Buildings</div>
+				<div id="buildingsMaster"></div>
+				<div id="rows"></div>
+				<div id="menu"></div>
+			</div>
+		</div>
+
+		<div id="sectionRight" class="inset">
+			<div id="store">
+				<div id="storeTitle" class="inset title zoneTitle">Store</div>
+				<div id="upgrades" class="storeSection upgradeBox"></div>
+				<div id="products" class="storeSection"></div>
+			</div>
+		</div>
+
+	</div>
+
+</div>
+
+</body>
+</html>

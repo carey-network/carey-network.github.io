@@ -1,0 +1,568 @@
+/* ---- Global ---- */
+* {
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Inter",sans-serif;
+  font-size: 16px;
+}
+
+/* ---- Body and Page Transitions ---- */
+body {
+  background:#000;
+  color:#fff;
+  line-height:1.7;
+  font-size:1.05rem;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  padding-bottom:120px;
+  opacity:0;
+  transition: opacity 0.5s ease;
+}
+
+body.fade-in { opacity:1; }
+body.fade-out { opacity:0; }
+
+/* ---- UI Element Transitions ---- */
+header, main, footer {
+  opacity: 0;
+  transform: translateY(8px) scale(0.985);
+  filter: blur(1.5px);
+  transition: opacity 0.35s ease-out, transform 0.35s ease-out, filter 0.35s ease-out;
+}
+
+body.fade-in header,
+body.fade-in main,
+body.fade-in footer {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
+
+body.fade-out header,
+body.fade-out main,
+body.fade-out footer {
+  opacity: 0;
+  transform: translateY(-8px) scale(0.985);
+  filter: blur(1.5px);
+}
+
+/* ---- Header ---- */
+.site-header {
+  text-align:center;
+  padding:20px 0;
+  background:#111;
+  border-bottom:2px solid #e65c00;
+}
+
+.logo { height:160px; width:auto; }
+
+/* ---- Main fills remaining space ---- */
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---- Hero ---- */
+.hero {
+  min-height:70vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:40px;
+  font-size:1.1rem;
+  flex: 1;   /* ← add this line here instead of a separate block */
+}
+
+.orange-bg {
+  background:linear-gradient(135deg,#e65c00,#000);
+}
+
+.hero h1 { font-size:3rem; margin-bottom:12px; }
+.hero p  { font-size:1.25rem; margin-bottom:20px; }
+
+/* ---- Buttons ---- */
+.btn-primary {
+  display:inline-block;
+  padding:14px 28px;
+  background:#fff;
+  color:#e65c00;
+  text-decoration:none;
+  font-weight:700;
+  border-radius:50px;
+  transition:0.25s ease;
+  box-shadow:0 0 10px #e65c00,0 0 20px #e65c00;
+}
+
+.btn-primary:hover {
+  background:#e65c00;
+  color:#fff;
+  box-shadow:0 0 20px #fff,0 0 40px #fff;
+}
+
+/* ---- Footer ---- */
+.site-footer {
+  text-align:center;
+  padding:20px 0;
+  font-size:1rem;
+  background:#111;
+  color:#777;
+  width:100%;
+  box-sizing:border-box;
+}
+
+/* ---- Utility Bar (STAYS LOCKED + GLOWING) ---- */
+.utility-bar {
+  position: fixed;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(17,17,17,0.8);
+  border-radius: 50px;
+  padding: 10px 20px;
+  display: flex;
+  width: 90%;
+  max-width: 500px;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 9999;
+  backdrop-filter: blur(10px);
+  box-shadow:
+    0 0 20px rgba(230,92,0,0.4),
+    0 0 40px rgba(230,92,0,0.2);
+  transition: transform 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* ---- Icons ---- */
+.utility-icon {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  transition:all 0.25s ease, box-shadow 0.3s ease;
+}
+
+.utility-icon img { width:40px; height:40px; transition:all 0.25s ease; }
+
+.utility-icon.active {
+  background:rgba(230,92,0,0.15);
+  box-shadow:0 0 10px #e65c00,0 0 25px #e65c00,0 0 40px rgba(230,92,0,0.6);
+}
+
+.utility-icon.active img { transform:scale(1.1); }
+
+.utility-icon:hover {
+  background:rgba(230,92,0,0.1);
+  box-shadow:0 0 8px #e65c00,0 0 18px rgba(230,92,0,0.6);
+}
+
+.utility-icon:hover img { transform:scale(1.08); }
+
+/* ---- Settings Activate Button ---- */
+.setting-card:first-child button {
+  background:#e65c00;
+  color:#fff;
+  border:none;
+  border-radius:12px;
+  padding:12px 24px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:0 0 10px #e65c00,0 0 20px rgba(230,92,0,0.6);
+  transition: all 0.25s ease;
+}
+
+.setting-card:first-child button:hover {
+  background:#ff6a00;
+  box-shadow:0 0 20px #fff,0 0 40px rgba(255,255,255,0.8);
+  transform: scale(1.05);
+}
+
+/* ---- Modern Toggle ---- */
+.toggle-switch {
+  position: relative;
+  width: 70px;
+  height: 36px;
+  display: inline-block;
+}
+
+.toggle-switch input { opacity:0; width:0; height:0; }
+
+.slider {
+  position: absolute;
+  cursor:pointer;
+  top:0; left:0; right:0; bottom:0;
+  background:#333;
+  border-radius:34px;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.6);
+}
+
+.slider:before {
+  position:absolute;
+  content:"";
+  height:30px; width:30px;
+  left:3px; bottom:3px;
+  background-color:#fff;
+  border-radius:50%;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow:0 2px 6px rgba(0,0,0,0.4);
+}
+
+input:checked + .slider {
+  background:#e65c00;
+  box-shadow:0 0 10px rgba(230,92,0,0.7), inset 0 2px 4px rgba(0,0,0,0.6);
+  animation: glowPulse 1.5s infinite alternate;
+}
+
+input:checked + .slider:before {
+  transform: translateX(34px);
+  box-shadow:0 0 8px rgba(255,255,255,0.6);
+}
+
+.toggle-switch:hover .slider { box-shadow:0 0 12px rgba(230,92,0,0.6), inset 0 2px 4px rgba(0,0,0,0.6); }
+.toggle-switch:hover .slider:before { box-shadow:0 0 12px rgba(255,255,255,0.7); }
+
+@keyframes glowPulse {
+  0%   { box-shadow:0 0 8px rgba(230,92,0,0.7), inset 0 2px 4px rgba(0,0,0,0.6); }
+  50%  { box-shadow:0 0 16px rgba(230,92,0,0.9), inset 0 2px 4px rgba(0,0,0,0.6); }
+  100% { box-shadow:0 0 8px rgba(230,92,0,0.7), inset 0 2px 4px rgba(0,0,0,0.6); }
+}
+
+/* ---- Popup Overlay ---- */
+.popup-overlay {
+  position: fixed; top:0; left:0; width:100%; height:100%;
+  background: rgba(0,0,0,0.7); backdrop-filter: blur(12px);
+  display:flex; justify-content:center; align-items:center;
+  opacity:0; pointer-events:none; transition:opacity 0.3s ease; z-index:10000;
+}
+
+.popup-overlay.show { opacity:1; pointer-events:all; }
+
+.popup-content {
+  background: rgba(17,17,17,0.95);
+  border-radius: 18px;
+  width: 380px; max-width: 90%;
+  padding: 40px 30px;
+  display:flex; flex-direction:column;
+  justify-content:center; align-items:center;
+  text-align:center; color:#fff;
+  box-shadow:0 0 30px #e65c00, 0 0 60px rgba(230,92,0,0.6);
+  transform: translateY(-30px);
+  opacity:0; transition: transform 0.35s ease, opacity 0.35s ease;
+}
+
+.popup-overlay.show .popup-content { transform:translateY(0); opacity:1; }
+
+.popup-content p { font-size:0.9rem; font-weight:400; margin-bottom:30px; line-height:1.6; }
+
+.popup-content button {
+  padding:18px 40px; border:none; border-radius:16px;
+  background:#e65c00; color:#fff; font-weight:700; font-size:1.4rem;
+  cursor:pointer; transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.popup-content button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px #e65c00, 0 0 45px rgba(255,140,0,0.9);
+}
+
+/* ---- Games Section ---- */
+.games-page .hero-container {
+  width: 100%;
+}
+
+.games-page .hero.orange-bg {
+  min-height: unset;
+  padding: 40px 60px 60px;
+  align-items: flex-start;
+}
+
+/* Games grid fades in with main since it lives inside <main> */
+.games-overlay {
+  width: 100%;
+  max-width: 1800px;
+  margin: 0 auto;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.4s ease-out 0.2s, transform 0.4s ease-out 0.2s;
+}
+
+body.fade-in .games-overlay {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+body.fade-out .games-overlay {
+  opacity: 0;
+  transform: translateY(-12px);
+}
+
+.games-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.game-card {
+  aspect-ratio: 1 / 1;
+  width: 211px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.45);
+  border: 2px solid rgba(230, 92, 0, 0.25);
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.game-card::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  background:
+    repeating-linear-gradient(
+      45deg,
+      rgba(230, 92, 0, 0.05) 0px,
+      rgba(230, 92, 0, 0.05) 1px,
+      transparent 1px,
+      transparent 12px
+    ),
+    linear-gradient(160deg, #1a1a1a 0%, #0d0d0d 100%);
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+}
+
+.game-card::after {
+  content: "\1F3AE";
+  font-size: 2rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.22;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  pointer-events: none;
+}
+
+.game-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 14px;
+  position: relative;
+  z-index: 1;
+  transition: transform 0.3s ease;
+}
+
+.game-card:hover {
+  transform: translateY(-5px) scale(1.03);
+  border-color: rgba(230, 92, 0, 0.75);
+  box-shadow:
+    0 0 18px rgba(230, 92, 0, 0.5),
+    0 0 36px rgba(230, 92, 0, 0.25),
+    0 8px 24px rgba(0, 0, 0, 0.6);
+}
+
+.game-card:hover::after {
+  opacity: 0.5;
+  transform: translate(-50%, -50%) scale(1.15);
+}
+
+.game-card:hover img {
+  transform: scale(1.05);
+}
+
+.games-section-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #e65c00;
+  margin-bottom: 20px;
+  opacity: 0.8;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 1400px) {
+  .game-card { width: 169px; }
+}
+
+@media (max-width: 1200px) {
+  .game-card { width: 163px; }
+  .games-page .hero.orange-bg { padding: 30px 30px 50px; }
+}
+
+@media (max-width: 640px) {
+  .game-card { width: 120px; }
+  .games-grid { gap: 10px; }
+}
+
+@media (max-width: 400px) {
+  .game-card { width: 100px; }
+}
+
+/* ===== GAME PLAYER ===== */
+.game-player {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.game-frame {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border: 3px solid #e65c00;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 0 25px rgba(230,92,0,0.5);
+}
+
+.game-frame iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* CONTROLS */
+.game-controls {
+  margin-top: 12px;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.game-controls button {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  border: none;
+  background: #111;
+  cursor: pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 0 10px rgba(230,92,0,0.4);
+  transition:0.25s ease;
+}
+
+.game-controls button:hover {
+  transform: scale(1.1);
+  box-shadow:0 0 20px #e65c00;
+}
+
+.game-controls img {
+  width: 24px;
+  height: 24px;
+}
+
+/* ===== REAL FULLSCREEN MODE (FIXED FOR iOS + UTILITY BAR) ===== */
+
+.embed-fullscreen {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100dvh;
+  overflow: hidden;
+  z-index: 99997;
+  background: #000;
+  padding-bottom: 0 !important; /* ← add this */
+}
+
+/* iframe takes FULL screen */
+.embed-fullscreen #gameFrame {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100vw !important;
+  height: 100dvh !important; /* iOS FIX */
+  z-index: 99998;
+  background: #000;
+}
+
+/* remove frame styling */
+.embed-fullscreen .game-frame {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+/* HIDE EVERYTHING ELSE */
+.embed-fullscreen header,
+.embed-fullscreen footer,
+.embed-fullscreen .game-controls,
+.embed-fullscreen .games-overlay,
+.embed-fullscreen .hero > *:not(.game-player),
+.embed-fullscreen .utility-bar,
+.embed-fullscreen #nav-container {
+  display: none !important;
+}
+
+/* EXIT BUTTON */
+#exitFullscreenBtn {
+  position: fixed;
+  top: env(safe-area-inset-top, 16px);
+  left: 16px;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  border: none;
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  font-size: 1.6rem;
+  cursor: pointer;
+  z-index: 99999;
+  display: none;
+  backdrop-filter: blur(10px);
+}
+
+.embed-fullscreen #exitFullscreenBtn {
+  display: block;
+}
+
+#exitFullscreenBtn:hover {
+  background: rgba(230,92,0,0.9);
+}
+
+.player-fullscreen {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100dvh !important;
+  max-width: unset !important;
+  background: #000 !important;
+  z-index: 99998;
+  display: flex !important;
+}
+
+.game-player:fullscreen .game-frame,
+.game-player:-webkit-full-screen .game-frame {
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  height: 100dvh;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  overflow: hidden;
+  aspect-ratio: unset; /* ← overrides the base 16/9 rule */
+}
+
+.game-player:fullscreen iframe,
+.game-player:-webkit-full-screen iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  aspect-ratio: unset; /* ← belt-and-suspenders on the iframe itself */
+}

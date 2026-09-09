@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard - The Carey Network</title>
+
+<link rel="apple-touch-icon" href="/images/logos/google-sheets-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Carey Network">
+
+<link rel="icon" href="/images/logos/google-sheets-icon.png">
+<link rel="manifest" href="/dashboard/manifest.json">
+
+<link rel="stylesheet" href="/css/style.css">
+
+<style>
+/* ---- Disable transition system (no main.js) ---- */
+body,
+body header,
+body main,
+body footer {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+  transition: none !important;
+}
+
+/* ---- Dashboard overrides ---- */
+
+/* Shrink the hero — we don't need 70vh for just a title */
+.admin-hero {
+  min-height: unset !important;
+  padding: 36px 20px 36px !important;
+}
+
+/* Stat cards */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: #1b1b1b;
+  border: 1px solid #2b2b2b;
+  border-radius: 18px;
+  padding: 24px 28px;
+}
+
+.stat-card h3 {
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 10px;
+}
+
+.stat-card .big {
+  font-size: 2.6rem;
+  color: #e65c00;
+  font-weight: 800;
+  line-height: 1;
+}
+
+/* Main grid */
+.dash-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+.dash-card {
+  background: #1b1b1b;
+  border: 1px solid #2b2b2b;
+  border-radius: 18px;
+  padding: 24px 28px;
+}
+
+.dash-card h3 {
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 14px;
+}
+
+/* Activity console */
+.console {
+  height: 300px;
+  overflow-y: auto;
+  background: #0b0b0b;
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-family: 'Fira Mono', monospace;
+  font-size: 0.82rem;
+  scrollbar-width: thin;
+  scrollbar-color: #333 #0b0b0b;
+}
+
+.console div {
+  margin-bottom: 7px;
+  line-height: 1.4;
+  color: rgba(230,92,0,0.75);
+}
+
+.ev-visit { color: #6fcf97 !important; }
+.ev-leave { color: #eb5757 !important; }
+.ev-nav   { color: #e65c00 !important; }
+
+/* Pages list */
+.pages-list .row {
+  padding: 10px 4px;
+  border-bottom: 1px solid #2b2b2b;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #fff;
+}
+
+.pages-list .row:last-child { border-bottom: none; }
+
+.pages-list .count {
+  background: rgba(230,92,0,0.15);
+  color: #e65c00;
+  font-weight: 700;
+  font-size: 0.78rem;
+  padding: 3px 9px;
+  border-radius: 20px;
+}
+
+/* Hero layout when it contains the dashboard */
+.admin-hero {
+  align-items: stretch !important;
+  text-align: left !important;
+}
+
+.admin-hero h1 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* Dashboard wrapper */
+.dashboard {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 0 10px;
+}
+
+@media (max-width: 900px) {
+  .dash-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <img src="/images/logo.png" class="logo" alt="The Carey Network">
+</header>
+
+<main>
+  <section class="hero orange-bg admin-hero">
+    <h1>Dashboard</h1>
+
+    <div class="dashboard">
+
+      <div class="stats">
+        <div class="stat-card">
+          <h3>Online Users</h3>
+          <div id="onlineUsers" class="big">—</div>
+        </div>
+        <div class="stat-card">
+          <h3>Total Site Visits</h3>
+          <div id="totalVisits" class="big">—</div>
+        </div>
+        <div class="stat-card">
+          <h3>Pages Active</h3>
+          <div id="trackedPages" class="big">—</div>
+        </div>
+      </div>
+
+      <div class="dash-grid">
+
+        <div class="dash-card">
+          <h3>Live Activity</h3>
+          <div id="activityFeed" class="console"></div>
+        </div>
+
+        <div class="dash-card">
+          <h3>Pages Being Viewed</h3>
+          <div id="pagesList" class="pages-list"></div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC0t3RK22ghr2O6WTtz6uFoyP6xUF8iw3A",
+  authDomain: "carey-network-info.firebaseapp.com",
+  databaseURL: "https://carey-network-info-default-rtdb.firebaseio.com",
+  projectId: "carey-network-info",
+  storageBucket: "carey-network-info.firebasestorage.app",
+  messagingSenderId: "1000390544880",
+  appId: "1:1000390544880:web:6c5f85436352b094272135",
+  measurementId: "G-C1C9SJ091R"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getDatabase(app);
+
+const elOnline  = document.getElementById("onlineUsers");
+const elVisits  = document.getElementById("totalVisits");
+const elTracked = document.getElementById("trackedPages");
+const elPages   = document.getElementById("pagesList");
+const elFeed    = document.getElementById("activityFeed");
+
+onValue(ref(db, "onlineUsers"), snap => {
+  const sessions = Object.values(snap.val() || {});
+  elOnline.textContent = sessions.length;
+
+  const pages = {};
+  sessions.forEach(u => { pages[u.page] = (pages[u.page] || 0) + 1; });
+  elTracked.textContent = Object.keys(pages).length;
+
+  elPages.innerHTML = "";
+  Object.entries(pages)
+    .sort((a, b) => b[1] - a[1])
+    .forEach(([page, count]) => {
+      const row   = document.createElement("div");
+      row.className = "row";
+      const name  = document.createElement("span");
+      name.textContent = page;
+      const badge = document.createElement("span");
+      badge.className = "count";
+      badge.textContent = count;
+      row.appendChild(name);
+      row.appendChild(badge);
+      elPages.appendChild(row);
+    });
+});
+
+onValue(ref(db, "activity"), snap => {
+  const entries = Object.values(snap.val() || {})
+    .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+  elVisits.textContent = entries.length.toLocaleString();
+
+  elFeed.innerHTML = "";
+  entries.slice(0, 100).forEach(entry => {
+    const line = document.createElement("div");
+    const t    = (entry.type || "event").toLowerCase();
+    line.classList.add(t === "visit" ? "ev-visit" : t === "leave" ? "ev-leave" : "ev-nav");
+    const time = new Date(entry.timestamp || Date.now()).toLocaleTimeString();
+    line.textContent = `[${time}] ${(entry.type || "event").toUpperCase()}  ${entry.page}`;
+    elFeed.appendChild(line);
+  });
+});
+</script>
+
+
+</body>
+</html>
