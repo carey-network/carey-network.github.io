@@ -131,7 +131,10 @@ function showCloakBlockedPopup() {
   popup.addEventListener("click", (e) => { if (e.target === popup) popup.remove(); });
 }
 
-/* ===== CLOAK ===== */
+function getSiteURL() {
+  return window.location.origin + "/";
+}
+
 function openCloak() {
   if (detectWebAppMode()) {
     showCloakBlockedPopup();
@@ -146,7 +149,7 @@ function openCloak() {
 
   var iframe = win.document.createElement("iframe");
   iframe.style.cssText = "position:absolute;top:0;left:0;width:100%;height:100%;border:none;";
-  iframe.src = "https://careynet.github.io";
+  iframe.src = getSiteURL();
 
   win.document.body.style.margin = "0";
   win.document.body.style.height = "100vh";
@@ -156,7 +159,6 @@ function openCloak() {
   window.location.replace("https://google.com");
 }
 
-/* ===== AUTO CLOAK ===== */
 function maybeAutoCloak() {
   if (window !== window.top) return;
   if (localStorage.getItem("autoCloak") !== "true") return;
