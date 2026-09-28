@@ -3,9 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Home - The Carey Network</title>
+<title>The Carey Network</title>
 
-<!-- Web-App / PWA Meta Tags -->
 <link rel="apple-touch-icon" href="/images/icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -14,56 +13,102 @@
 <link rel="icon" href="/images/icon.png">
 <link rel="manifest" href="/manifest.json">
 
-<link rel="stylesheet" href="../css/style.css" />
+<link rel="stylesheet" href="css/style.css" />
+
+<style>
+.tiktok-btn {
+  position: fixed;
+  bottom: 25px;
+  left: 25px;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 2px solid rgba(230,92,0,0.6);
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 9999;
+  box-shadow:
+    0 0 12px #e65c00,
+    0 0 25px rgba(230,92,0,0.6);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.tiktok-btn img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  display: block;
+}
+
+.tiktok-btn:hover {
+  transform: scale(1.1);
+  box-shadow:
+    0 0 20px #e65c00,
+    0 0 40px rgba(230,92,0,0.8);
+}
+
+.popup-content .btn-primary {
+  margin-bottom: 16px;
+}
+</style>
 </head>
+
 <body>
 
 <header class="site-header">
-  <img src="../images/logo.png" class="logo" alt="The Carey Network Logo" />
+  <img src="images/logo.png" class="logo" alt="The Carey Network" />
 </header>
 
 <main>
   <section class="hero orange-bg">
     <h1>Welcome to The Carey Network</h1>
     <p>Carey's greatest entertainment platform</p>
-    <a href="/games/" class="btn-primary">Explore</a>
+    <a href="pages/games.html" class="btn-primary">Explore</a>
   </section>
 </main>
 
-<!-- Utility Bar -->
-<div id="nav-container"></div>
+<button class="tiktok-btn" id="tiktokBtn" aria-label="Follow us on TikTok">
+  <img src="/images/apps/tiktok.png" alt="TikTok" />
+</button>
 
-<footer class="site-footer">
-  <p>&copy; 2026 The Carey Network</p>
-</footer>
-
-<!-- Welcome Popup -->
-<div id="welcomePopup" class="popup-overlay">
+<div class="popup-overlay" id="tiktokPopup">
   <div class="popup-content">
-    <p>
-       Welcome to The Carey Network!<br><br>
-       welcome back to school<br>
-       i got banned for who knows why so i fixed the site a bit there will be more updates coming.
-    </p>
-    <button onclick="closeWelcomePopup()">ok</button>
+    <p>Follow me on TikTok to get the latest links! I'll be posting some content there soon.</p>
+    <a href="https://www.tiktok.com/@careynetwork" target="_blank" rel="noopener" class="btn-primary">Follow on TikTok</a>
+    <button id="tiktokClose">Close</button>
   </div>
 </div>
 
-<script>
-  function closeWelcomePopup() {
-    const popup = document.getElementById("welcomePopup");
-    popup.classList.remove("show");
-    localStorage.setItem("visitedCareyNetwork", "true");
-  }
+<div id="nav-container"></div>
 
-  window.addEventListener("load", () => {
-    const hasVisited = localStorage.getItem("visitedCareyNetwork");
-    if (!hasVisited) {
-      document.getElementById("welcomePopup").classList.add("show");
-    }
+<footer class="site-footer">
+  <p>&copy; 2026 The Carey Network.</p>
+</footer>
+
+<script>
+(function () {
+  var btn = document.getElementById("tiktokBtn");
+  var popup = document.getElementById("tiktokPopup");
+  var close = document.getElementById("tiktokClose");
+
+  btn.addEventListener("click", function () {
+    popup.classList.add("show");
   });
+
+  close.addEventListener("click", function () {
+    popup.classList.remove("show");
+  });
+
+  popup.addEventListener("click", function (e) {
+    if (e.target === popup) popup.classList.remove("show");
+  });
+})();
 </script>
 
 <script src="/js/main.js"></script>
+
 </body>
 </html>
